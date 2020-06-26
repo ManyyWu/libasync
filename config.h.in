@@ -2,9 +2,13 @@
  * config.h
  */
 
+#ifndef ASYNC_CONFIG_H
+#define ASYNC_CONFIG_H
 
 /* version */
 #define AS_VERSION_MAJOR @AS_VERSION_MAJOR@
 #define AS_VERSION_MINOR @AS_VERSION_MINOR@
 #define AS_VERSION_PATCH @AS_VERSION_PATCH@
 #define AS_VERSION "@AS_VERSION@"
+
+#endif

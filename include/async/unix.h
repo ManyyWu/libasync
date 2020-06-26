@@ -3,6 +3,8 @@
 #include <semaphore.h>
 #include <pthread.h>
 
+#include <netdb.h>
+
 #if defined(AS_SYSTEM_MACOSX)
 # include "async/darwin.h"
 #endif

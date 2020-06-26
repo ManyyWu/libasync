@@ -45,6 +45,7 @@
 #endif
 
 #include "async/config.h"
+#include "async/error.h"
 
 #if defined(AS_SYSTEM_WIN32)
 # include "async/win.h"
@@ -66,6 +67,10 @@
 typedef uint64_t as_ns_t;
 typedef uint64_t as_us_t;
 typedef uint64_t as_ms_t;
+
+/* error */
+const char *
+as_strerror (int code);
 
 /* mutex */
 AS_EXPORT int
