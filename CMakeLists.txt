@@ -99,7 +99,9 @@ endif()
 if (as_build_test)
   list(APPEND async_test_srcs
        test/cmockery.c
-       test/run_test.c)
+       test/run_test.c
+       test/test-util.c
+       test/test-get-time.c)
   add_executable(async_run_test ${async_test_srcs})
   target_include_directories(async_run_test PUBLIC test)
   target_link_libraries(async_run_test async_a)

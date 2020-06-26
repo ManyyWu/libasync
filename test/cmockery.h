@@ -32,6 +32,20 @@
 #define __func__ __FUNCTION__
 #endif
 
+#define UNIT_TEST(name)                \
+    void run_test_##name(void **state);\
+    void run_test_##name(void **state)
+
+#define TEST_LIST_START(name)          \
+    const UnitTest name[] = {
+#define TEST_LIST_END                  \
+    };
+#define TEST_DECLARE(name)             \
+    void run_test_##name(void**);
+#define TEST_ENTRY(name)               \
+    unit_test(run_test_##name),
+#define TEST_ENTRY_
+
 /* Largest integral type.  This type should be large enough to hold any
  * pointer or integer supported by the compiler. */
 #ifndef LargestIntegralType

@@ -464,7 +464,7 @@ static void free_value(const void *value, void *cleanup_value_data) {
 static void free_symbol_map_value(const void *value,
                                   void *cleanup_value_data) {
     SymbolMapValue * const map_value = (SymbolMapValue*)value;
-    const unsigned int children = (unsigned int)cleanup_value_data;
+    const __intptr_t children = (__intptr_t)cleanup_value_data;
     assert_true(value);
     list_free(&map_value->symbol_values_list_head,
               children ? free_symbol_map_value : free_value,
@@ -1211,7 +1211,7 @@ void mock_assert(const int result, const char* const expression,
                  const char* const file, const int line) {
     if (!result) {
         if (global_expecting_assert) {
-            longjmp(global_expect_assert_env, (int)expression);
+            longjmp(global_expect_assert_env, (__intptr_t)expression);
         } else {
             print_error("ASSERT: %s\n", expression);
             _fail(file, line);
@@ -1394,7 +1394,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
     unsigned int i;
     char *block = (char*)ptr;
     MallocBlockInfo *block_info;
-    _assert_true((int)ptr, "ptr", file, line);
+    _assert_true((__intptr_t)ptr, "ptr", file, line);
     block_info = (MallocBlockInfo*)(block - (MALLOC_GUARD_SIZE +
                                                sizeof(*block_info)));
     // Check the guard blocks.
