@@ -44,7 +44,6 @@
     void run_test_##name(void**);
 #define TEST_ENTRY(name)               \
     unit_test(run_test_##name),
-#define TEST_ENTRY_
 
 /* Largest integral type.  This type should be large enough to hold any
  * pointer or integer supported by the compiler. */
@@ -280,12 +279,12 @@
  * void Test1();
  *
  * int main(int argc, char* argv[]) {
- *     const UnitTest tests[] = {
- *         unit_test(Test0);
- *         unit_test(Test1);
- *         unit_test_with_prefix(SecondRun_, Test1);
- *     };
- *     return run_tests(tests);
+ *   const UnitTest tests[] = {
+ *       unit_test(Test0);
+ *       unit_test(Test1);
+ *       unit_test_with_prefix(SecondRun_, Test1);
+ *   };
+ *   return run_tests(tests);
  * }
  */
 #define run_tests(tests) _run_tests(tests, sizeof(tests) / sizeof(tests)[0])
@@ -344,9 +343,9 @@ typedef int (*CheckParameterValue)(const LargestIntegralType value,
 
 // Type of the unit test function.
 typedef enum UnitTestFunctionType {
-    UNIT_TEST_FUNCTION_TYPE_TEST = 0,
-    UNIT_TEST_FUNCTION_TYPE_SETUP,
-    UNIT_TEST_FUNCTION_TYPE_TEARDOWN,
+  UNIT_TEST_FUNCTION_TYPE_TEST = 0,
+  UNIT_TEST_FUNCTION_TYPE_SETUP,
+  UNIT_TEST_FUNCTION_TYPE_TEARDOWN,
 } UnitTestFunctionType;
 
 /* Stores a unit test function with its name and type.
@@ -354,24 +353,24 @@ typedef enum UnitTestFunctionType {
  * possible to specify NULL function pointers.
  */
 typedef struct UnitTest {
-    const char* name;
-    UnitTestFunction function;
-    UnitTestFunctionType function_type;
+  const char* name;
+  UnitTestFunction function;
+  UnitTestFunctionType function_type;
 } UnitTest;
 
 
 // Location within some source code.
 typedef struct SourceLocation {
-    const char* file;
-    int line;
+  const char* file;
+  int line;
 } SourceLocation;
 
 // Event that's called to check a parameter value.
 typedef struct CheckParameterEvent {
-    SourceLocation location;
-    const char *parameter_name;
-    CheckParameterValue check_value;
-    LargestIntegralType check_value_data;
+  SourceLocation location;
+  const char *parameter_name;
+  CheckParameterValue check_value;
+  LargestIntegralType check_value_data;
 } CheckParameterEvent;
 
 // Used by expect_assert_failure() and mock_assert().
@@ -495,7 +494,7 @@ void _test_free(void* const ptr, const char* file, const int line);
 
 void _fail(const char * const file, const int line);
 int _run_test(
-    const char * const function_name, const UnitTestFunction Function,
+    const char * const function_name, const UnitTestFunction Function, size_t n,
     void ** const state, const UnitTestFunctionType function_type,
     const void* const heap_check_point);
 int _run_tests(const UnitTest * const tests, const size_t number_of_tests);
@@ -505,5 +504,9 @@ void print_message(const char* const format, ...);
 void print_error(const char* const format, ...);
 void vprint_message(const char* const format, va_list args);
 void vprint_error(const char* const format, va_list args);
+void print_message2(const char* const format, ...);
+void print_error2(const char* const format, ...);
+void vprint_message2(const char* const format, va_list args);
+void vprint_error2(const char* const format, va_list args);
 
 #endif // CMOCKERY_H_

@@ -10,10 +10,10 @@
 #include <errno.h>
 
 #if EDOM > 0
-# define AS_ERRNO(x)  (int)(-(x))
+# define AS_ERRNO(x)  (assert((x) >= 0), (-(x)))
 # define AS__ERRNO(x) (-(x))
 #else
-# define AS_ERRNO(x)  (int)(x)
+# define AS_ERRNO(x)  (assert((x) <= 0), (x))
 # define AS__ERRNO(x) (x)
 #endif
 

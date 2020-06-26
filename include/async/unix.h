@@ -5,7 +5,7 @@
 
 #include <netdb.h>
 
-#if defined(AS_SYSTEM_MACOSX)
+#if defined(AS_SYSTEM_DARWIN)
 # include "async/darwin.h"
 #endif
 
@@ -22,5 +22,5 @@ typedef pthread_barrier_t as_barrier_t;
 typedef as_platform_sem_t as_sem_t;
 typedef pthread_t as_thread_t;
 
-
+typedef pthread_once_t as_once_t;
 

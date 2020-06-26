@@ -1,7 +1,9 @@
 #include "async.h"
 #include "core/core.h"
 
+#include <sys/time.h>
 #include <stdlib.h>
+#include <assert.h>
 
 as_ns_t
 as_monotonic_time (int fast) {
@@ -17,4 +19,14 @@ as_monotonic_time (int fast) {
   if (clock_gettime((fast ? fast_clock_id : CLOCK_MONOTONIC), &ts))
     abort();
   return AS_TIMESPEC_TO_NS(ts);
+}
+
+as_us_t
+as_system_time () {
+  struct timeval tv;
+
+  if (gettimeofday(&tv, NULL))
+    abort();
+
+  return AS_TIMEVAL_TO_US(tv);
 }

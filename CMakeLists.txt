@@ -102,7 +102,10 @@ if (as_build_test)
        test/run_test.c
        test/test-util.c
        test/test-get-time.c
-       test/test-error.c)
+       test/test-error.c
+       test/test-lock.c
+       test/test-thread.c
+       )
   add_executable(async_run_test ${async_test_srcs})
   target_include_directories(async_run_test PUBLIC test)
   target_link_libraries(async_run_test async_a)
