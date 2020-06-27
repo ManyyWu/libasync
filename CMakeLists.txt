@@ -39,7 +39,7 @@ include_directories(${inc_dirs})
 
 list(APPEND async_srcs
      src/core/core.c
-     src/core/common.c
+     src/core/common_internal.c
      src/core/log.c
      src/core/timer.c)
 

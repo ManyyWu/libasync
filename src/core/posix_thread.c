@@ -304,7 +304,7 @@ as_sem_trywait (as_sem_t* sem) {
 int
 as_thread_create (as_thread_t* t,
                   const as_thread_opts_t* opts,
-                  void (*entry) (void*),
+                  as_thread_entry_cb entry,
                   void* args) {
   int err;
   pthread_attr_t attr;

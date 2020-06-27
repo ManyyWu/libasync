@@ -14,37 +14,17 @@
 
 #include "async.h"
 
-struct list_head {
-  struct list_head* next, *prev;
-};
-
 #define LIST_HEAD_INIT(name) { &(name), &(name) }
 
-#define LIST_HEAD(name) struct list_head name = LIST_HEAD_INIT(name)
+#define LIST_HEAD(name) as_list_head_t name = LIST_HEAD_INIT(name)
 
 #define INIT_LIST_HEAD(ptr) \
     do { (ptr)->next = (ptr); (ptr)->prev = (ptr); } while (0)
 
-#undef offsetof
-#if defined(__compiler_offsetof)
-# define offsetof(TYPE, MEMBER) __compiler_offsetof(TYPE, MEMBER)
-#else
-# define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
-#endif
-
-#if defined(AS_SYSTEM_WIN32)
-# define container_of(ptr, type, member) ((type *)( \
-         (PCHAR)(ptr) - (ULONG_PTR)(&((type *)0)->member)))
-#else
-# define container_of(ptr, type, member) ({ \
-         const typeof( ((type *)0)->member ) *__mptr = (ptr); \
-         (type *)( (char *)__mptr - offsetof(type, member) );})
-#endif
-
 AS_INLINE void
-__list_add (struct list_head* add,
-            struct list_head* prev,
-            struct list_head* next) {
+__list_add (as_list_head_t* add,
+            as_list_head_t* prev,
+            as_list_head_t* next) {
   next->prev = add;
   add->next = next;
   add->prev = prev;
@@ -52,54 +32,54 @@ __list_add (struct list_head* add,
 }
 
 AS_INLINE void
-list_add (struct list_head* add, struct list_head* head) {
+list_add (as_list_head_t* add, as_list_head_t* head) {
   __list_add(add, head, head->next);
 }
 
 AS_INLINE void
-list_add_tail (struct list_head* add, struct list_head* head) {
+list_add_tail (as_list_head_t* add, as_list_head_t* head) {
   __list_add(add, head->prev, head);
 }
 
 AS_INLINE void
-__list_del (struct list_head* prev, struct list_head* next) {
+__list_del (as_list_head_t* prev, as_list_head_t* next) {
   next->prev = prev;
   prev->next = next;
 }
 
 AS_INLINE void
-list_del (struct list_head* entry) {
+list_del (as_list_head_t* entry) {
   __list_del(entry->prev, entry->next);
 }
 
 AS_INLINE void
-list_del_init (struct list_head* entry) {
+list_del_init (as_list_head_t* entry) {
   __list_del(entry->prev, entry->next);
   INIT_LIST_HEAD(entry);
 }
 
 AS_INLINE int
-list_empty (struct list_head* head) {
+list_empty (as_list_head_t* head) {
   return head->next == head;
 }
 
 AS_INLINE int
-list_entry_is_last (struct list_head* entry, struct list_head* head) {
+list_entry_is_last (as_list_head_t* entry, as_list_head_t* head) {
   return head->prev == entry;
 }
 
 AS_INLINE int
-list_entry_is_first (struct list_head* entry, struct list_head* head) {
+list_entry_is_first (as_list_head_t* entry, as_list_head_t* head) {
   return head->next == entry;
 }
 
 AS_INLINE void
-list_splice (struct list_head* list, struct list_head* head) {
-  struct list_head* first = list->next;
+list_splice (as_list_head_t* list, as_list_head_t* head) {
+  as_list_head_t* first = list->next;
 
   if (first != list) {
-    struct list_head *last = list->prev;
-    struct list_head *at = head->next;
+    as_list_head_t *last = list->prev;
+    as_list_head_t *at = head->next;
 
     first->prev = head;
     head->next = first;
@@ -129,8 +109,8 @@ list_splice (struct list_head* list, struct list_head* head) {
          pos = pnext, pnext = pos->next)
 
 AS_INLINE size_t
-list_count_entries (struct list_head *head) {
-  struct list_head *pos;
+list_count_entries (as_list_head_t *head) {
+  as_list_head_t *pos;
   size_t ct = 0;
 
   list_for_each(pos, head)

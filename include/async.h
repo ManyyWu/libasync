@@ -48,6 +48,7 @@
 #define AS_INLINE static inline
 #endif
 
+#include "async/common.h"
 #include "async/config.h"
 #include "async/error.h"
 
@@ -60,49 +61,51 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <time.h>
+#include <stdarg.h>
 
-/* constants */
-#define AS_NSEC (uint64_t)1e9
-#define AS_USEC (uint64_t)1e6
-#define AS_MSEC (uint64_t)1e3
+/* handle types */
+typedef struct as_timer_s as_timer_t;
 
-/* macros */
-#define AS_TIMESPEC_TO_NS(ts)                                                               \
-    ((ts).tv_sec*AS_NSEC + (ts).tv_nsec)
-#define AS_TIMESPEC_TO_US(ts)                                                               \
-    ((ts).tv_sec*AS_USEC + (ts).tv_nsec/AS_MSEC)
-#define AS_TIMESPEC_TO_MS(ts)                                                               \
-    ((ts).tv_sec*AS_MSEC + (ts).tv_nsec/AS_USEC)
-#define AS_NS_TO_TIMESPEC(ts, ns)                                                           \
-    do { (ts).tv_sec = (ns)/AS_NSEC; (ts).tv_nsec = (ns)%AS_NSEC; } while (0)
-#define AS_US_TO_TIMESPEC(ts, us)                                                           \
-    do { (ts).tv_sec = (us)/AS_USEC; (ts).tv_nsec = ((us)%AS_USEC)*AS_MSEC; } while (0)
-#define AS_MS_TO_TIMESPEC(ts, ms)                                                           \
-    do { (ts).tv_sec = (ms)/AS_MSEC; (ts).tv_nsec = ((ms)%AS_MSEC)*AS_USEC; } while (0)
-#define AS_TIMEVAL_TO_US(tv)                                                                \
-    ((tv).tv_sec*AS_USEC + (tv).tv_usec)
-#define AS_TIMEVAL_TO_MS(tv)                                                                \
-    ((tv).tv_sec*AS_MSEC + (tv).tv_usec/AS_MSEC)
-#define AS_US_TO_TIMEVAL(tv, us)                                                            \
-    do { (tv).tv_sec = (us)/AS_USEC; (tv).tv_usec = (us)%AS_USEC; } while (0)
-#define AS_MS_TO_TIMEVAL(tv, ms)                                                            \
-    do { (tv).tv_sec = (ms)/AS_MSEC; (tv).tv_usec = ((ms)%AS_MSEC)*AS_MSEC; } while (0)
+/* request types */
 
-/* types */
+/* callback */
+typedef void (*as_log_cb) (int level, const char* file, const char* func,
+                           size_t line, const char* format, va_list vl);
+typedef void (*as_thread_entry_cb) (void* args);
+typedef void (*as_timer_cb) (as_timer_t* handle);
 
 /* error */
 AS_EXPORT const char *
 as_strerror (int code);
 
 /* time */
-typedef uint64_t as_ns_t;
-typedef uint64_t as_us_t;
-typedef uint64_t as_ms_t;
+typedef uint64_t as_time_t;
+typedef as_time_t as_ns_t;
+typedef as_time_t as_us_t;
+typedef as_time_t as_ms_t;
 
 AS_EXPORT as_ns_t
 as_monotonic_time (int fast);
 AS_EXPORT as_us_t
 as_system_time (void);
+
+/* log */
+enum {
+  AS_LOG_FATAL   = 1,
+  AS_LOG_ERROR   = 2,
+  AS_LOG_WARNING = 3,
+  AS_LOG_INFO    = 4,
+  AS_LOG_DEBUG   = 5,
+  AS_LOG_TRACE   = 6,
+};
+
+AS_EXPORT void
+as_set_log_callback (as_log_cb cb);
+AS_EXPORT as_log_cb
+as_get_log_callback ();
+AS_EXPORT void
+as_log (int level, const char* file, const char* func,
+        size_t line, const char* format, ...);
 
 /* mutex */
 AS_EXPORT int
@@ -187,7 +190,7 @@ typedef struct as_thread_opts_s {
 AS_EXPORT int
 as_thread_create (as_thread_t* t,
                   const as_thread_opts_t* opts,
-                  void (*entry) (void*),
+                  as_thread_entry_cb entry,
                   void* args);
 AS_EXPORT as_thread_t
 as_thread_self (void);
@@ -203,6 +206,38 @@ AS_EXPORT void
 as_sleep (as_ms_t ms);
 AS_EXPORT void
 as_once (as_once_t* once, void (*callback)(void));
+
+/* list */
+typedef struct as_list_head_s {
+  struct as_list_head_s* next, *prev;
+} as_list_head_t;
+
+/* heap */
+
+/* loop */
+
+/* handle */
+
+/* stream */
+
+/* pipe */
+
+/* tcp */
+
+/* udp */
+
+/* signal */
+
+/* async */
+
+/* process */
+
+/* timer */
+struct as_timer_s {
+  as_timer_cb timeout_cb;
+  as_time_t   timeout;
+  int         persist;
+};
 
 #if defined(__cplusplus)
 //extern }
