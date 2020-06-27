@@ -146,3 +146,29 @@ UNIT_TEST(barrier) {
   for (i = 0; i < THR_NUM; ++i)
     assert_int_equal(as_thread_join(&t[i]), 0);
 }
+
+as_sem_t s_sem;
+
+static void
+sem_test_thread_proc (void *args) {
+  as_sem_post(&s_sem);
+  as_sem_post(&s_sem);
+  as_sem_post(&s_sem);
+}
+
+UNIT_TEST(sem) {
+  as_thread_t t;
+
+  as_sem_init(&s_sem, 0);
+
+  assert_int_equal(as_thread_create(&t, NULL, sem_test_thread_proc, NULL), 0);
+
+  as_sem_wait(&s_sem);
+  as_sem_wait(&s_sem);
+  as_sem_wait(&s_sem);
+  assert_int_equal(as_sem_trywait(&s_sem), AS_EAGAIN);
+
+  assert_int_equal(as_thread_join(&t), 0);
+
+  as_sem_destroy(&s_sem);
+}
