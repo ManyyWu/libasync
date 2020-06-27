@@ -72,7 +72,7 @@ endif()
 if(as_build_static)
   add_library(async_a STATIC ${async_srcs})
   target_link_libraries(async_a PRIVATE ${async_libs})
-  target_compile_options(async_a PRIVATE ${compile_flags})
+  target_link_options(async_a PRIVATE ${compile_flags})
 
   if(as_build_http)
     list(APPEND async_http_libs
@@ -86,7 +86,7 @@ if(as_build_shared)
   add_library(async SHARED ${async_srcs})
   target_link_libraries(async PRIVATE ${async_libs})
   target_compile_definitions(async INTERFACE AS_USING_SHARED PRIVATE AS_BUILDING_SHARED)
-  target_compile_options(async PRIVATE ${compile_flags})
+  target_link_options(async PRIVATE ${compile_flags})
 
   if(as_build_http)
     list(APPEND async_http_libs
@@ -109,7 +109,7 @@ if (as_build_test)
   add_executable(async_run_test ${async_test_srcs})
   target_include_directories(async_run_test PUBLIC test)
   target_link_libraries(async_run_test async_a)
-  target_compile_options(async_run_test PRIVATE ${compile_flags})
+  target_link_options(async_run_test PRIVATE ${compile_flags})
   add_test(NAME async_run_test
            COMMAND async_run_test
            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
