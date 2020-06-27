@@ -181,7 +181,7 @@ typedef struct as_thread_opts_s {
 
 AS_EXPORT int
 as_thread_create (as_thread_t* t,
-                  as_thread_opts_t* opts,
+                  const as_thread_opts_t* opts,
                   thread_entry entry,
                   void *args);
 AS_EXPORT as_thread_t

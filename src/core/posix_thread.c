@@ -303,7 +303,7 @@ as_sem_trywait (as_sem_t* sem) {
 
 int
 as_thread_create (as_thread_t* t,
-                  as_thread_opts_t* opts,
+                  const as_thread_opts_t* opts,
                   thread_entry entry,
                   void *args) {
   int err;
@@ -321,8 +321,8 @@ as_thread_create (as_thread_t* t,
     stack_size = opts->stack_size;
     stack_size = (stack_size + page_size - 1) & ~(page_size - 1);
 #if defined(PTHREAD_STACK_MIN)
-    if (opts->stack_size < PTHREAD_STACK_MIN)
-      opts->stack_size = PTHREAD_STACK_MIN;
+    if (stack_size < PTHREAD_STACK_MIN)
+      stack_size = PTHREAD_STACK_MIN;
 #endif
     if (pthread_attr_init(&attr)
         || pthread_attr_setstacksize(&attr, stack_size))

@@ -12,13 +12,22 @@ thread_proc (void *args) {
 UNIT_TEST(thread) {
   as_thread_t t;
   as_thread_t t1;
+  as_thread_opts_t opts;
 
   assert_int_equal(as_thread_create(&t, NULL, NULL, NULL), AS_EINVAL);
   assert_int_equal(as_thread_create(&t, NULL, NULL, &t1), AS_EINVAL);
 
   as_barrier_init(&g_barrier, 2);
-
   assert_int_equal(as_thread_create(&t, NULL, thread_proc, &t1), 0);
+  as_barrier_wait_and_destroy(&g_barrier);
+  assert_int_not_equal(as_thread_equal(&t, &t1), 0);
+  assert_int_equal(as_thread_join(&t), 0);
+  assert_int_equal(as_thread_join(&t), AS_ESRCH);
+
+  opts.flags = AS_THREAD_FLAG_SET_STACK_SIZE;
+  opts.stack_size = 409600;
+  as_barrier_init(&g_barrier, 2);
+  assert_int_equal(as_thread_create(&t, &opts, thread_proc, &t1), 0);
   as_barrier_wait_and_destroy(&g_barrier);
   assert_int_not_equal(as_thread_equal(&t, &t1), 0);
   assert_int_equal(as_thread_join(&t), 0);
