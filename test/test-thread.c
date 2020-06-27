@@ -21,7 +21,8 @@ UNIT_TEST(thread) {
   assert_int_equal(as_thread_create(&t, NULL, thread_proc, &t1), 0);
   as_barrier_wait_and_destroy(&g_barrier);
   assert_int_not_equal(as_thread_equal(&t, &t1), 0);
-  //assert_int_equal(as_thread_join(&t), 0);
+  assert_int_equal(as_thread_join(&t), 0);
+  assert_int_equal(as_thread_join(&t), AS_ESRCH);
 }
 
 UNIT_TEST(sleep) {

@@ -349,7 +349,7 @@ as_thread_tid (void) {
 }
 
 int
-as_thread_join (as_thread_t* t) {
+as_thread_join (const as_thread_t* t) {
   return AS_ERRNO(pthread_join(*t, NULL));
 }
 

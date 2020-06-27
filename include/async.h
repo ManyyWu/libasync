@@ -189,9 +189,11 @@ as_thread_self (void);
 AS_EXPORT as_tid_t
 as_thread_tid (void);
 AS_EXPORT int
-as_thread_join (as_thread_t* t);
+as_thread_join (const as_thread_t* t);
 AS_EXPORT int
 as_thread_equal (const as_thread_t* t1, const as_thread_t* t2);
+AS_EXPORT void
+as_stack_trace (char **buf, size_t *size);
 AS_EXPORT void
 as_sleep (as_ms_t ms);
 AS_EXPORT void
