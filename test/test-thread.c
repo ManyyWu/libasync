@@ -34,6 +34,16 @@ UNIT_TEST(thread) {
   assert_int_equal(as_thread_join(&t), AS_ESRCH);
 }
 
+static void
+trace_callback (char *frame) {
+  assert_true(frame);
+  print_message2(frame);
+}
+
+UNIT_TEST(stack_trace) {
+  assert_true(as_stack_trace(trace_callback) > 0);
+}
+
 UNIT_TEST(sleep) {
   as_ns_t begin;
   as_ms_t diff;

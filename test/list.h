@@ -10,6 +10,7 @@ TEST_DECLARE(recursive_mutex)
 TEST_DECLARE(rwlock)
 TEST_DECLARE(cond)
 TEST_DECLARE(thread)
+TEST_DECLARE(stack_trace)
 TEST_DECLARE(sleep)
 
 #ifdef _WIN32
@@ -26,6 +27,7 @@ TEST_LIST_START(unit_tests_entry)
   TEST_ENTRY(recursive_mutex)
   TEST_ENTRY(cond)
   TEST_ENTRY(thread)
+  TEST_ENTRY(stack_trace)
   TEST_ENTRY(sleep)
 
 #ifdef _WIN32

@@ -1569,8 +1569,7 @@ static LONG WINAPI exception_filter(EXCEPTION_POINTERS *exception_pointers) {
 // Standard output and error print methods.
 void vprint_message(const char *const format, va_list args) {
   char buffer[4096];
-  size_t len;
-  len = vsnprintf(buffer, sizeof(buffer), format, args);
+  vsnprintf(buffer, sizeof(buffer), format, args);
   puts(buffer);
 #ifdef _WIN32
   OutputDebugString(buffer);
@@ -1580,7 +1579,6 @@ void vprint_message(const char *const format, va_list args) {
 
 void vprint_error(const char *const format, va_list args) {
   char buffer[4096];
-  size_t len;
   vsnprintf(buffer, sizeof(buffer), format, args);
   fputs(buffer, stderr);
 #ifdef _WIN32
@@ -1592,7 +1590,7 @@ void vprint_error(const char *const format, va_list args) {
 void vprint_message2(const char *const format, va_list args) {
   char buffer[4096];
   size_t len;
-  len = vsnprintf(buffer + 3, sizeof(buffer), format, args) + 3;
+  len = vsnprintf(buffer + 3, sizeof(buffer) - 3, format, args) + 3;
   buffer[0] = '>';
   buffer[1] = '>';
   buffer[2] = ' ';
@@ -1617,7 +1615,7 @@ void vprint_message2(const char *const format, va_list args) {
 void vprint_error2(const char *const format, va_list args) {
   char buffer[4096];
   size_t len;
-  vsnprintf(buffer + 3, sizeof(buffer), format, args) + 3;
+  len = vsnprintf(buffer + 3, sizeof(buffer) - 3, format, args) + 3;
   buffer[0] = '>';
   buffer[1] = '>';
   buffer[2] = ' ';

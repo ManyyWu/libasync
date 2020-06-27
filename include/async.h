@@ -168,7 +168,6 @@ as_sem_trywait (as_sem_t* sem);
 
 /* thread */
 typedef uint64_t as_tid_t;
-typedef void (*thread_entry)(void*);
 
 enum {
   AS_THREAD_FLAG_SET_STACK_SIZE = 0x01,
@@ -182,7 +181,7 @@ typedef struct as_thread_opts_s {
 AS_EXPORT int
 as_thread_create (as_thread_t* t,
                   const as_thread_opts_t* opts,
-                  thread_entry entry,
+                  void (*entry) (void*),
                   void *args);
 AS_EXPORT as_thread_t
 as_thread_self (void);
@@ -192,8 +191,8 @@ AS_EXPORT int
 as_thread_join (const as_thread_t* t);
 AS_EXPORT int
 as_thread_equal (const as_thread_t* t1, const as_thread_t* t2);
-AS_EXPORT void
-as_stack_trace (char **buf, size_t *size);
+AS_EXPORT int
+as_stack_trace (void (*callback) (char*));
 AS_EXPORT void
 as_sleep (as_ms_t ms);
 AS_EXPORT void
