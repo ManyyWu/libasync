@@ -14,6 +14,7 @@ TEST_DECLARE(sem)
 TEST_DECLARE(thread)
 TEST_DECLARE(stack_trace)
 TEST_DECLARE(sleep)
+TEST_DECLARE(doubly_list)
 
 #ifdef _WIN32
 TEST_DECLARE(win_sys_error)
@@ -33,6 +34,7 @@ TEST_LIST_START(unit_tests_entry)
   TEST_ENTRY(thread)
   TEST_ENTRY(stack_trace)
   TEST_ENTRY(sleep)
+  TEST_ENTRY(doubly_list)
 
 #ifdef _WIN32
   TEST_ENTRY(error)

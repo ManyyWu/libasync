@@ -305,7 +305,7 @@ int
 as_thread_create (as_thread_t* t,
                   const as_thread_opts_t* opts,
                   void (*entry) (void*),
-                  void *args) {
+                  void* args) {
   int err;
   pthread_attr_t attr;
   pthread_attr_t* attr_inited;

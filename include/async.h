@@ -42,6 +42,12 @@
 # define AS_EXPORT
 #endif
 
+#ifdef __GNUC__
+#define AS_INLINE static __inline__
+#else
+#define AS_INLINE static inline
+#endif
+
 #include "async/config.h"
 #include "async/error.h"
 
@@ -182,7 +188,7 @@ AS_EXPORT int
 as_thread_create (as_thread_t* t,
                   const as_thread_opts_t* opts,
                   void (*entry) (void*),
-                  void *args);
+                  void* args);
 AS_EXPORT as_thread_t
 as_thread_self (void);
 AS_EXPORT as_tid_t
