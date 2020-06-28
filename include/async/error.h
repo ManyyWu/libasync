@@ -10,11 +10,24 @@
 #include <errno.h>
 
 #if EDOM > 0
-# define AS_ERRNO(x)  (-(x))
 # define AS__ERRNO(x) (-(x))
 #else
-# define AS_ERRNO(x)  (x)
 # define AS__ERRNO(x) (x)
+#endif
+#if defined(__GNUC__)
+#if EDOM > 0
+# define AS_ERRNO(x) ({                \
+    int AS_UNIQUE_ID(errno) = (x);     \
+    assert(AS_UNIQUE_ID(errno) >= 0);  \
+    AS__ERRNO(AS_UNIQUE_ID(errno)); })
+#else
+# define AS_ERRNO(x) ({                \
+    int AS_UNIQUE_ID(errno) = (x);     \
+    assert(AS_UNIQUE_ID(errno) <= 0);  \
+    AS__ERRNO(AS_UNIQUE_ID(errno)); })
+#endif
+#else
+# define AS_ERRNO(x) AS__ERRNO(x)
 #endif
 
 #define AS__ESUCCESS        (0)

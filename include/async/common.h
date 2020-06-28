@@ -4,8 +4,14 @@
 #include <stddef.h>
 
 /* memory */
-#define as_free(p) \
-    do { free((p)); p = NULL; } while (0)
+#if defined(__GNUC__)
+# define as_free(p)                   \
+    do {                              \
+      void *AS_UNIQUE_ID(free) = (p); \
+      free((AS_UNIQUE_ID(free)));     \
+      AS_UNIQUE_ID(free) = NULL;      \
+    } while (0)
+#endif
 
 /* offset */
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
@@ -17,8 +23,23 @@
 # define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 #endif
 
-#define container_of(ptr, type, member) \
+#undef offset
+#if defined(__GNUC__)
+# define container_of(ptr, type, member) ({                           \
+    const typeof( ((type *)0)->member ) *AS_UNIQUE_ID(ptr) = (ptr);   \
+    (type *)( (char *)AS_UNIQUE_ID(ptr) - offsetof(type, member) );})
+#else
+# define container_of(ptr, type, member)                              \
     ((type *) ((char *) (ptr) - offsetof(type, member)))
+#endif
+
+/* unique id */
+#if defined(__GNUC__)
+# define AS_UNIQUE_ID(name) \
+    __libasync_internal_##name##__COUNTER__
+#else
+    __libasync_internal_##name
+#endif
 
 /* log */
 #define as_log_fatal(format, ...)                                                      \

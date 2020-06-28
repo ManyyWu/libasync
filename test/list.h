@@ -15,11 +15,13 @@ TEST_DECLARE(thread)
 TEST_DECLARE(stack_trace)
 TEST_DECLARE(sleep)
 TEST_DECLARE(doubly_list)
+TEST_DECLARE(heap)
 
 #ifdef _WIN32
 TEST_DECLARE(win_sys_error)
 #endif
 
+#if 0
 TEST_LIST_START(unit_tests_entry)
   TEST_ENTRY(version)
   TEST_ENTRY(macros)
@@ -35,8 +37,14 @@ TEST_LIST_START(unit_tests_entry)
   TEST_ENTRY(stack_trace)
   TEST_ENTRY(sleep)
   TEST_ENTRY(doubly_list)
+  TEST_ENTRY(heap)
 
 #ifdef _WIN32
   TEST_ENTRY(error)
 #endif
 TEST_LIST_END
+#else
+TEST_LIST_START(unit_tests_entry)
+  TEST_ENTRY(heap)
+TEST_LIST_END
+#endif

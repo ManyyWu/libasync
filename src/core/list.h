@@ -1,14 +1,3 @@
-/*
- * Copyright (C) 2008 Karel Zak <kzak@redhat.com>
- * Copyright (C) 1999-2008 by Theodore Ts'o
- *
- * This file may be redistributed under the terms of the
- * GNU Lesser General Public License.
- *
- * (based on list.h from e2fsprogs)
- * Merge sort based on kernel's implementation.
- */
-
 #ifndef ASYNC_LIST_H
 #define ASYNC_LIST_H
 
