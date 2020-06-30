@@ -106,7 +106,8 @@ if (as_build_test)
        test/test-lock.c
        test/test-thread.c
        test/test-list.c
-       )
+       test/test-heap.c
+      )
   add_executable(async_run_test ${async_test_srcs})
   target_include_directories(async_run_test PUBLIC test)
   target_link_libraries(async_run_test async_a)
