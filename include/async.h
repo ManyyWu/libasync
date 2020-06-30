@@ -207,11 +207,6 @@ as_sleep (as_ms_t ms);
 AS_EXPORT void
 as_once (as_once_t* once, void (*callback)(void));
 
-/* list */
-typedef struct as_list_head_s {
-  struct as_list_head_s* next, *prev;
-} as_list_head_t;
-
 /* heap */
 
 /* loop */

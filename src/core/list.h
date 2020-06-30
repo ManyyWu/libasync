@@ -10,6 +10,11 @@
 #define INIT_LIST_HEAD(ptr) \
     do { (ptr)->next = (ptr); (ptr)->prev = (ptr); } while (0)
 
+/* list */
+typedef struct as_list_head_s {
+  struct as_list_head_s* next, *prev;
+} as_list_head_t;
+
 AS_INLINE void
 __list_add (as_list_head_t* add,
             as_list_head_t* prev,
