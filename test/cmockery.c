@@ -84,7 +84,7 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
     pointer_type, largest_integral_type) \
     ((pointer_type)((ValuePointer*)&(largest_integral_type))->pointer)
 
-// Used to cast LargetIntegralType to void* and vice versa.
+// Used to cast LargetIntegralType to void *and vice versa.
 typedef union ValuePointer {
   LargestIntegralType value;
   void *pointer;
@@ -261,7 +261,7 @@ static LPTOP_LEVEL_EXCEPTION_FILTER previous_exception_filter;
 // Fatal exceptions.
 typedef struct ExceptionCodeInfo {
     DWORD code;
-    const char* description;
+    const char *description;
 } ExceptionCodeInfo;
 
 #define EXCEPTION_CODE_INFO(exception_code) {exception_code, #exception_code}

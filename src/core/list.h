@@ -12,13 +12,12 @@
 
 /* list */
 typedef struct as_list_head_s {
-  struct as_list_head_s* next, *prev;
+  struct as_list_head_s *next;
+  struct as_list_head_s *prev;
 } as_list_head_t;
 
 AS_INLINE void
-__list_add (as_list_head_t* add,
-            as_list_head_t* prev,
-            as_list_head_t* next) {
+__list_add (as_list_head_t *add, as_list_head_t *prev, as_list_head_t *next) {
   next->prev = add;
   add->next = next;
   add->prev = prev;
@@ -26,23 +25,23 @@ __list_add (as_list_head_t* add,
 }
 
 AS_INLINE void
-list_add (as_list_head_t* add, as_list_head_t* head) {
+list_add (as_list_head_t *add, as_list_head_t *head) {
   __list_add(add, head, head->next);
 }
 
 AS_INLINE void
-list_add_tail (as_list_head_t* add, as_list_head_t* head) {
+list_add_tail (as_list_head_t *add, as_list_head_t *head) {
   __list_add(add, head->prev, head);
 }
 
 AS_INLINE void
-__list_del (as_list_head_t* prev, as_list_head_t* next) {
+__list_del (as_list_head_t *prev, as_list_head_t *next) {
   next->prev = prev;
   prev->next = next;
 }
 
 AS_INLINE void
-list_del (as_list_head_t* entry) {
+list_del (as_list_head_t *entry) {
   __list_del(entry->prev, entry->next);
 }
 

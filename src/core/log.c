@@ -4,8 +4,8 @@
 static as_log_cb s_log_cb = as__default_log_callback;
 
 void
-as__default_log_callback (int level, const char* file, const char* func,
-                          size_t line, const char* format, va_list vl) {
+as__default_log_callback (int level, const char *file, const char *func,
+                          size_t line, const char *format, va_list vl) {
   switch (level) {
   case AS_LOG_FATAL:
   case AS_LOG_ERROR:
@@ -33,8 +33,8 @@ as_get_log_callback () {
 }
 
 void
-as_log (int level, const char* file, const char* func,
-        size_t line, const char* format, ...) {
+as_log (int level, const char *file, const char *func,
+        size_t line, const char *format, ...) {
   va_list vl;
 
   va_start(vl, format);

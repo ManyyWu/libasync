@@ -10,7 +10,7 @@ UNIT_TEST(doubly_list) {
 #define NODE_NUM 10
   int i;
   struct node nodes[NODE_NUM];
-  as_list_head_t* pos, *next;
+  as_list_head_t *pos, *next;
   LIST_HEAD(l);
 
   for (i = 0; i < NODE_NUM; ++i) {

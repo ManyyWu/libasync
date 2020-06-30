@@ -8,7 +8,7 @@
 #include <assert.h>
 
 int
-as_mutex_init (as_mutex_t* mutex) {
+as_mutex_init (as_mutex_t *mutex) {
   assert(mutex);
 #if defined(NDEBUG) || !defined(PTHREAD_MUTEX_ERRORCHECK)
   return AS_ERRNO(pthread_mutex_init(mutex, NULL));
@@ -30,7 +30,7 @@ as_mutex_init (as_mutex_t* mutex) {
 }
 
 int
-as_recursive_mutex_init (as_mutex_t* mutex) {
+as_recursive_mutex_init (as_mutex_t *mutex) {
   int err;
   pthread_mutexattr_t attr;
 
@@ -47,25 +47,25 @@ as_recursive_mutex_init (as_mutex_t* mutex) {
 }
 
 void
-as_mutex_destroy (as_mutex_t* mutex) {
+as_mutex_destroy (as_mutex_t *mutex) {
   if (pthread_mutex_destroy(mutex))
     abort();
 }
 
 void
-as_mutex_lock (as_mutex_t* mutex) {
+as_mutex_lock (as_mutex_t *mutex) {
   if (pthread_mutex_lock(mutex))
     abort();
 }
 
 void
-as_mutex_unlock (as_mutex_t* mutex) {
+as_mutex_unlock (as_mutex_t *mutex) {
   if (pthread_mutex_unlock(mutex))
     abort();
 }
 
 int
-as_mutex_trylock (as_mutex_t* mutex) {
+as_mutex_trylock (as_mutex_t *mutex) {
   int err;
 
   err = pthread_mutex_trylock(mutex);
@@ -80,30 +80,30 @@ as_mutex_trylock (as_mutex_t* mutex) {
 
 /* rwlock */
 int
-as_rwlock_init (as_rwlock_t* rwlock) {
+as_rwlock_init (as_rwlock_t *rwlock) {
   return AS_ERRNO(pthread_rwlock_init(rwlock, NULL));
 }
 
 void
-as_rwlock_destroy (as_rwlock_t* rwlock) {
+as_rwlock_destroy (as_rwlock_t *rwlock) {
   if (pthread_rwlock_destroy(rwlock))
     abort();
 }
 
 void
-as_rwlock_rdlock (as_rwlock_t* rwlock) {
+as_rwlock_rdlock (as_rwlock_t *rwlock) {
   if (pthread_rwlock_rdlock(rwlock))
     abort();
 }
 
 void
-as_rwlock_rdunlock (as_rwlock_t* rwlock) {
+as_rwlock_rdunlock (as_rwlock_t *rwlock) {
   if (pthread_rwlock_unlock(rwlock))
     abort();
 }
 
 int
-as_rwlock_rdtrylock (as_rwlock_t* rwlock) {
+as_rwlock_rdtrylock (as_rwlock_t *rwlock) {
   int err;
 
   err = pthread_rwlock_tryrdlock(rwlock);
@@ -116,13 +116,13 @@ as_rwlock_rdtrylock (as_rwlock_t* rwlock) {
 }
 
 void
-as_rwlock_wrlock (as_rwlock_t* rwlock) {
+as_rwlock_wrlock (as_rwlock_t *rwlock) {
   if (pthread_rwlock_wrlock(rwlock))
     abort();
 }
 
 void
-as_rwlock_wrunlock (as_rwlock_t* rwlock) {
+as_rwlock_wrunlock (as_rwlock_t *rwlock) {
   if (pthread_rwlock_unlock(rwlock))
     abort();
 }

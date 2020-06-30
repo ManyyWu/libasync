@@ -36,8 +36,8 @@ as_system_time () {
 
 int
 as_stack_trace (void (*callback) (char*)) {
-  void* array[STACK_TRACE_LINE];
-  char** stacks;
+  void *array[STACK_TRACE_LINE];
+  char **stacks;
   int line;
   int i;
 

@@ -2,34 +2,34 @@
 #define ASYNC_HEAP_H
 
 struct heap_node {
-  struct heap_node* left;
-  struct heap_node* right;
-  struct heap_node* parent;
+  struct heap_node *left;
+  struct heap_node *right;
+  struct heap_node *parent;
 };
+
+typedef int (*heap_compare_fn) (const struct heap_node *a, const struct heap_node *b);
 
 struct heap {
-  struct heap_node* min;
-  unsigned int count;
+  struct heap_node *min;
+  unsigned int      count;
+  heap_compare_fn   less_than;
 };
 
-typedef int (*heap_compare_fn) (const struct heap_node* a,
-                                const struct heap_node* b);
-
 AS_INLINE void
-heap_init (struct heap* heap) {
+heap_init (struct heap *heap, heap_compare_fn less_than) {
   heap->min = NULL;
   heap->count = 0;
+  heap->less_than = less_than;
 }
 
 AS_INLINE struct heap_node*
-heap_min (const struct heap* heap) {
+heap_min (const struct heap *heap) {
   return heap->min;
 }
 
 AS_INLINE void
-heap_node_swap (struct heap* heap, struct heap_node* parent,
-                struct heap_node* child) {
-  struct heap_node* sibling;
+heap_node_swap (struct heap *heap, struct heap_node *parent, struct heap_node *child) {
+  struct heap_node *sibling;
   struct heap_node t;
 
   t = *parent;
@@ -61,10 +61,9 @@ heap_node_swap (struct heap* heap, struct heap_node* parent,
 }
 
 AS_INLINE void
-heap_insert (struct heap* heap, struct heap_node* newnode,
-             heap_compare_fn less_than) {
-  struct heap_node** parent;
-  struct heap_node** child;
+heap_insert (struct heap *heap, struct heap_node *newnode) {
+  struct heap_node **parent;
+  struct heap_node **child;
   unsigned int path;
   unsigned int n;
   unsigned int k;
@@ -92,16 +91,15 @@ heap_insert (struct heap* heap, struct heap_node* newnode,
   *child = newnode;
   heap->count += 1;
 
-  while (newnode->parent != NULL && less_than(newnode, newnode->parent))
+  while (newnode->parent != NULL && heap->less_than(newnode, newnode->parent))
     heap_node_swap(heap, newnode->parent, newnode);
 }
 
 AS_INLINE void
-heap_remove (struct heap* heap, struct heap_node* node,
-             heap_compare_fn less_than) {
-  struct heap_node* smallest;
-  struct heap_node** max;
-  struct heap_node* child;
+heap_remove (struct heap *heap, struct heap_node *node) {
+  struct heap_node *smallest;
+  struct heap_node **max;
+  struct heap_node *child;
   unsigned int path;
   unsigned int k;
   unsigned int n;
@@ -157,22 +155,22 @@ heap_remove (struct heap* heap, struct heap_node* node,
 
   for (;;) {
     smallest = child;
-    if (child->left != NULL && less_than(child->left, smallest))
+    if (child->left != NULL && heap->less_than(child->left, smallest))
       smallest = child->left;
-    if (child->right != NULL && less_than(child->right, smallest))
+    if (child->right != NULL && heap->less_than(child->right, smallest))
       smallest = child->right;
     if (smallest == child)
       break;
     heap_node_swap(heap, child, smallest);
   }
 
-  while (child->parent != NULL && less_than(child, child->parent))
+  while (child->parent != NULL && heap->less_than(child, child->parent))
     heap_node_swap(heap, child->parent, child);
 }
 
 AS_INLINE void
-heap_pop (struct heap* heap, heap_compare_fn less_than) {
-  heap_remove(heap, heap->min, less_than);
+heap_pop (struct heap *heap) {
+  heap_remove(heap, heap->min);
 }
 
 #endif

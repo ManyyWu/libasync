@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 void
-as_once (as_once_t* once, void (*callback)(void)) {
+as_once (as_once_t *once, void (*callback)(void)) {
   if (pthread_once(once, callback))
     abort();
 }

@@ -71,11 +71,11 @@ UNIT_TEST(heap) {
   struct heap_node *min;
   struct myheap_node nodes[NODE_NUM];
 
-  heap_init(&h);
+  heap_init(&h, less_than);
   for (i = 0; i < NODE_NUM; ++i) {
     INIT_MYNODE(nodes[i].node);
     nodes[i].data = array[i];
-    heap_insert(&h, &nodes[i].node, less_than);
+    heap_insert(&h, &nodes[i].node);
   }
   assert_int_equal(h.count, NODE_NUM);
 
@@ -84,7 +84,7 @@ UNIT_TEST(heap) {
     assert_true(min);
     temp[i] = ((struct myheap_node *)min)->data;
     assert_int_equal(((struct myheap_node *)min)->data, result[i]);
-    heap_pop(&h, less_than);
+    heap_pop(&h);
   }
   //print_heap(temp, NODE_NUM);
   assert_true(!heap_min(&h));

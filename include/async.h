@@ -48,8 +48,9 @@
 #define AS_INLINE static inline
 #endif
 
-#include "async/common.h"
 #include "async/config.h"
+#include "async/common.h"
+#include "async/handle.h"
 #include "async/error.h"
 
 #if defined(AS_SYSTEM_WIN32)
@@ -63,23 +64,27 @@
 #include <time.h>
 #include <stdarg.h>
 
+/* handle type */
+
 /* handle types */
-typedef struct as_timer_s as_timer_t;
+typedef struct as_handle_s as_handle_t;
+typedef struct as_timer_s  as_timer_t;
+typedef struct as_loop_s   as_loop_t;
 
 /* request types */
 
 /* callback */
-typedef void (*as_log_cb) (int level, const char* file, const char* func,
-                           size_t line, const char* format, va_list vl);
-typedef void (*as_thread_entry_cb) (void* args);
-typedef void (*as_timer_cb) (as_timer_t* handle);
+typedef void (*as_log_cb) (int level, const char *file, const char *func,
+                           size_t line, const char *format, va_list vl);
+typedef void (*as_thread_entry_cb) (void *args);
+typedef void (*as_timer_cb) (as_timer_t *handle);
 
 /* error */
 AS_EXPORT const char *
 as_strerror (int code);
 
 /* time */
-typedef uint64_t as_time_t;
+typedef uint64_t  as_time_t;
 typedef as_time_t as_ns_t;
 typedef as_time_t as_us_t;
 typedef as_time_t as_ms_t;
@@ -104,70 +109,70 @@ as_set_log_callback (as_log_cb cb);
 AS_EXPORT as_log_cb
 as_get_log_callback ();
 AS_EXPORT void
-as_log (int level, const char* file, const char* func,
-        size_t line, const char* format, ...);
+as_log (int level, const char *file, const char *func,
+        size_t line, const char *format, ...);
 
 /* mutex */
 AS_EXPORT int
-as_mutex_init (as_mutex_t* mutex);
+as_mutex_init (as_mutex_t *mutex);
 AS_EXPORT int
-as_recursive_mutex_init (as_mutex_t* mutex);
+as_recursive_mutex_init (as_mutex_t *mutex);
 AS_EXPORT void
-as_mutex_destroy (as_mutex_t* mutex);
+as_mutex_destroy (as_mutex_t *mutex);
 AS_EXPORT void
-as_mutex_lock (as_mutex_t* mutex);
+as_mutex_lock (as_mutex_t *mutex);
 AS_EXPORT void
-as_mutex_unlock (as_mutex_t* mutex);
+as_mutex_unlock (as_mutex_t *mutex);
 AS_EXPORT int
-as_mutex_trylock (as_mutex_t* mutex);
+as_mutex_trylock (as_mutex_t *mutex);
 
 /* rwlock */
 AS_EXPORT int
-as_rwlock_init (as_rwlock_t* rwlock);
+as_rwlock_init (as_rwlock_t *rwlock);
 AS_EXPORT void
-as_rwlock_destroy (as_rwlock_t* rwlock);
+as_rwlock_destroy (as_rwlock_t *rwlock);
 AS_EXPORT void
-as_rwlock_rdlock (as_rwlock_t* rwlock);
+as_rwlock_rdlock (as_rwlock_t *rwlock);
 AS_EXPORT void
-as_rwlock_rdunlock (as_rwlock_t* rwlock);
+as_rwlock_rdunlock (as_rwlock_t *rwlock);
 AS_EXPORT int
-as_rwlock_rdtrylock (as_rwlock_t* rwlock);
+as_rwlock_rdtrylock (as_rwlock_t *rwlock);
 AS_EXPORT void
-as_rwlock_wrlock (as_rwlock_t* rwlock);
+as_rwlock_wrlock (as_rwlock_t *rwlock);
 AS_EXPORT void
-as_rwlock_wrunlock (as_rwlock_t* rwlock);
+as_rwlock_wrunlock (as_rwlock_t *rwlock);
 AS_EXPORT int
-as_rwlock_wrtrylock (as_rwlock_t* rwlock);
+as_rwlock_wrtrylock (as_rwlock_t *rwlock);
 
 /* condition variable */
 AS_EXPORT int
-as_cond_init (as_cond_t* cond);
+as_cond_init (as_cond_t *cond);
 AS_EXPORT void
-as_cond_destroy (as_cond_t* cond);
+as_cond_destroy (as_cond_t *cond);
 AS_EXPORT void
-as_cond_signal (as_cond_t* cond);
+as_cond_signal (as_cond_t *cond);
 AS_EXPORT void
-as_cond_broadcast (as_cond_t* cond);
+as_cond_broadcast (as_cond_t *cond);
 AS_EXPORT void
-as_cond_wait (as_cond_t* cond, as_mutex_t* mutex);
+as_cond_wait (as_cond_t *cond, as_mutex_t *mutex);
 AS_EXPORT int
-as_cond_timedwait (as_cond_t* cond, as_mutex_t* mutex, as_ns_t timeout);
+as_cond_timedwait (as_cond_t *cond, as_mutex_t *mutex, as_ns_t timeout);
 
 /* barrier */
 AS_EXPORT int
-as_barrier_init (as_barrier_t* barrier, uint32_t count);
+as_barrier_init (as_barrier_t *barrier, uint32_t count);
 AS_EXPORT void
-as_barrier_destroy (as_barrier_t* barrier);
+as_barrier_destroy (as_barrier_t *barrier);
 AS_EXPORT void
-as_barrier_wait_and_destroy (as_barrier_t* barrier);
+as_barrier_wait_and_destroy (as_barrier_t *barrier);
 AS_EXPORT int
-as_barrier_wait (as_barrier_t* barrier);
+as_barrier_wait (as_barrier_t *barrier);
 
 /* semaphone */
 AS_EXPORT int
-as_sem_init (as_sem_t* sem, unsigned int value);
+as_sem_init (as_sem_t *sem, unsigned int value);
 AS_EXPORT void
-as_sem_destroy (as_sem_t* sem);
+as_sem_destroy (as_sem_t *sem);
 AS_EXPORT void
 as_sem_post (as_sem_t* sem);
 AS_EXPORT void
@@ -183,15 +188,13 @@ enum {
 };
 
 typedef struct as_thread_opts_s {
-  int flags;
+  int    flags;
   size_t stack_size;
 } as_thread_opts_t;
 
 AS_EXPORT int
-as_thread_create (as_thread_t* t,
-                  const as_thread_opts_t* opts,
-                  as_thread_entry_cb entry,
-                  void* args);
+as_thread_create (as_thread_t* t, const as_thread_opts_t* opts,
+                  as_thread_entry_cb entry, void* args);
 AS_EXPORT as_thread_t
 as_thread_self (void);
 AS_EXPORT as_tid_t
@@ -210,8 +213,14 @@ as_once (as_once_t* once, void (*callback)(void));
 /* heap */
 
 /* loop */
+struct as_loop_t {
+
+};
 
 /* handle */
+struct as_handle_t {
+
+};
 
 /* stream */
 
@@ -228,11 +237,23 @@ as_once (as_once_t* once, void (*callback)(void));
 /* process */
 
 /* timer */
+
+
 struct as_timer_s {
   as_timer_cb timeout_cb;
-  as_time_t   timeout;
-  int         persist;
+  as_ms_t     timeout;
+  as_ms_t     interval;
+  void *      heap_node[3];
 };
+
+AS_EXPORT int
+as_timer_init (as_loop_t *loop, as_timer_t *handle);
+AS_EXPORT int
+as_timer_start (as_timer_t *handle, as_ms_t timeout, as_ms_t interval, as_timer_cb cb);
+AS_EXPORT void
+as_timer_reset (as_timer_t *handle, as_ms_t timeout, as_ms_t interval, as_timer_cb cb);
+AS_EXPORT int
+as_timer_stop (as_timer_t *handle);
 
 #if defined(__cplusplus)
 //extern }

@@ -45,7 +45,7 @@ static as_cond_t s_cond;
 static int s_n;
 
 static void
-cond_test_thread_proc (void* args) {
+cond_test_thread_proc (void *args) {
   as_mutex_lock(&s_mutex);
   s_n++;
   as_cond_signal(&s_cond);
@@ -53,7 +53,7 @@ cond_test_thread_proc (void* args) {
 }
 
 static void
-cond_test_thread_proc1 (void* args) {
+cond_test_thread_proc1 (void *args) {
   as_mutex_lock(&s_mutex);
   s_n++;
   as_cond_wait(&s_cond, &s_mutex);
@@ -62,7 +62,7 @@ cond_test_thread_proc1 (void* args) {
 }
 
 static void
-cond_test_thread_proc2 (void* args) {
+cond_test_thread_proc2 (void *args) {
   as_mutex_lock(&s_mutex);
   s_n++;
   as_cond_wait(&s_cond, &s_mutex);
@@ -78,7 +78,7 @@ UNIT_TEST(cond) {
   assert_int_equal(as_mutex_init(&s_mutex), 0);
   assert_int_equal(as_cond_init(&s_cond), 0);
 
-  // test 0
+  /* test 0 */
   s_n = 0;
   for (i = 0; i < THR_NUM; ++i)
     assert_int_equal(as_thread_create(&t[i], NULL, cond_test_thread_proc, NULL), 0);
@@ -92,7 +92,7 @@ UNIT_TEST(cond) {
   for (i = 0; i < THR_NUM; ++i)
     assert_int_equal(as_thread_join(&t[i]), 0);
 
-  // test 1
+  /* test 1 */
   s_n = 0;
   for (i = 0; i < THR_NUM; ++i)
     assert_int_equal(as_thread_create(&t[i], NULL, cond_test_thread_proc1, NULL), 0);
@@ -106,7 +106,7 @@ UNIT_TEST(cond) {
   for (i = 0; i < THR_NUM; ++i)
     assert_int_equal(as_thread_join(&t[i]), 0);
 
-  // test 2
+  /* test 2 */
   s_n = 0;
   as_barrier_init(&s_barrier, THR_NUM + 1);
   for (i = 0; i < THR_NUM; ++i)
@@ -127,7 +127,7 @@ UNIT_TEST(cond) {
 }
 
 static void
-barrier_test_thread_proc (void* args) {
+barrier_test_thread_proc (void *args) {
   as_barrier_wait_and_destroy(&s_barrier);
 }
 
@@ -150,7 +150,7 @@ UNIT_TEST(barrier) {
 as_sem_t s_sem;
 
 static void
-sem_test_thread_proc (void* args) {
+sem_test_thread_proc (void *args) {
   as_sem_post(&s_sem);
   as_sem_post(&s_sem);
   as_sem_post(&s_sem);

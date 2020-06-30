@@ -3,7 +3,7 @@
 static as_barrier_t s_barrier;
 
 static void
-thread_proc (void* args) {
+thread_proc (void *args) {
   assert_true(args);
   *(as_thread_t *)args = as_thread_self();
   as_barrier_wait_and_destroy(&s_barrier);
@@ -35,7 +35,7 @@ UNIT_TEST(thread) {
 }
 
 static void
-trace_callback (char* frame) {
+trace_callback (char *frame) {
   assert_true(frame);
   print_message2(frame);
 }
