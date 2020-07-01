@@ -20,6 +20,8 @@
 //# define AS_SYSTEM_UNIX
 #elif defined(__APPLE__) && defined(__MACH__)
 # define AS_SYSTEM_DARWIN
+#elif defined(__MINGW__)
+# define AS_SYSTEM_MINGW
 #else
 # error unsupported platform
 #endif
@@ -74,10 +76,13 @@ typedef struct as_loop_s   as_loop_t;
 /* request types */
 
 /* callback */
-typedef void (*as_log_cb) (int level, const char *file, const char *func,
-                           size_t line, const char *format, va_list vl);
+typedef void (*as_log_cb)          (int level,const char *file, const char *func,
+                                    size_t line, const char *format, va_list vl);
 typedef void (*as_thread_entry_cb) (void *args);
-typedef void (*as_timer_cb) (as_timer_t *handle);
+typedef void (*as_timer_cb)        (as_timer_t *handle);
+typedef void (*as_close_cb)        (as_handle_t *handle);
+typedef int  (*as_heap_less_than)  (const void *a, const void *b);
+
 
 /* error */
 AS_EXPORT const char *
@@ -211,16 +216,33 @@ AS_EXPORT void
 as_once (as_once_t* once, void (*callback)(void));
 
 /* heap */
+typedef struct as_heap_s {
+  struct heap_node *min;
+  uint32_t          count;
+  as_heap_less_than less_than;
+} as_heap_t;
+
 
 /* loop */
-struct as_loop_t {
-
+struct as_loop_s {
+  void *data;
+  AS_LOOP_PRIVATE_FIELDS
 };
+
+AS_EXPORT int
+as_run (as_loop_t *loop);
+
+AS_EXPORT int
+as_wakeup (as_loop_t *loop);
 
 /* handle */
-struct as_handle_t {
-
+struct as_handle_s {
+  int data;
+  AS_HANDLE_PRIVATE_FIELDS
 };
+
+AS_EXPORT int
+as_close (as_handle_t *handle, as_close_cb cb);
 
 /* stream */
 
@@ -240,20 +262,18 @@ struct as_handle_t {
 
 
 struct as_timer_s {
-  as_timer_cb timeout_cb;
-  as_ms_t     timeout;
-  as_ms_t     interval;
-  void *      heap_node[3];
+  AS_HANDLE_PRIVATE_FIELDS
+  AS_TIMER_PRIVATE_FIELDS
 };
 
 AS_EXPORT int
 as_timer_init (as_loop_t *loop, as_timer_t *handle);
 AS_EXPORT int
 as_timer_start (as_timer_t *handle, as_ms_t timeout, as_ms_t interval, as_timer_cb cb);
-AS_EXPORT void
-as_timer_reset (as_timer_t *handle, as_ms_t timeout, as_ms_t interval, as_timer_cb cb);
 AS_EXPORT int
 as_timer_stop (as_timer_t *handle);
+AS_EXPORT int
+as_timer_expired (as_timer_t *handle);
 
 #if defined(__cplusplus)
 //extern }

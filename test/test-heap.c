@@ -57,7 +57,7 @@ print_heap(int array[], int count) {
 
 static
 int
-less_than (const struct heap_node* a, const struct heap_node* b) {
+less_than (const void *a, const void *b) {
   return (((struct myheap_node *)a)->data < ((struct myheap_node *)b)->data);
 }
 
@@ -67,7 +67,7 @@ UNIT_TEST(heap) {
   int result[] = {3, 3, 4, 4, 7, 9, 23, 24, 24, 32, 42, 42, 42, 42, 43, 45, 75, 87};
 #define NODE_NUM (sizeof(array) / sizeof(array[0]))
   int temp[NODE_NUM];
-  struct heap h;
+  as_heap_t h;
   struct heap_node *min;
   struct myheap_node nodes[NODE_NUM];
 

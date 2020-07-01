@@ -41,7 +41,7 @@ list(APPEND async_srcs
      src/core/core.c
      src/core/common_internal.c
      src/core/log.c
-     src/core/timer.c)
+        src/event/timer.c)
 
 if(WIN32)
   list(APPEND async_srcs
@@ -51,7 +51,7 @@ if(WIN32)
   list(APPEND async_libs
        ws2_32)
 else()
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  if(CMAKE_SYSTEM_NAME MATCHES "Linux|CYGWIN")
     list(APPEND async_srcs
          src/core/linux_core.c)
   elseif(APPLE)

@@ -2,7 +2,7 @@
 #include "core/list.h"
 
 struct node {
-  as_list_head_t head;
+  struct list_head head;
   int index;
 };
 
@@ -10,7 +10,7 @@ UNIT_TEST(doubly_list) {
 #define NODE_NUM 10
   int i;
   struct node nodes[NODE_NUM];
-  as_list_head_t *pos, *next;
+  struct list_head *pos, *next;
   LIST_HEAD(l);
 
   for (i = 0; i < NODE_NUM; ++i) {

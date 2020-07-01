@@ -1,5 +1,8 @@
 #include "async.h"
 #include "core/core.h"
+#if defined(AS_SYSTEM_WIN32)
+#include "win_core.h"
+#endif
 
 #include <sys/time.h>
 #include <stdlib.h>
@@ -14,9 +17,11 @@ as_monotonic_time (int fast) {
   struct timespec ts;
 
   if (fast_clock_id == -1 && fast) {
+#if defined(CLOCK_MONOTONIC_COARSE)
     if (0 == clock_getres(CLOCK_MONOTONIC_COARSE, &ts) && ts.tv_nsec <= 1e6)
       fast_clock_id = CLOCK_MONOTONIC_COARSE;
     else
+#endif
       fast_clock_id = CLOCK_MONOTONIC;
   }
   if (clock_gettime((fast ? fast_clock_id : CLOCK_MONOTONIC), &ts))

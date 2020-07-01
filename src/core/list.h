@@ -5,19 +5,19 @@
 
 #define LIST_HEAD_INIT(name) { &(name), &(name) }
 
-#define LIST_HEAD(name) as_list_head_t name = LIST_HEAD_INIT(name)
+#define LIST_HEAD(name) struct list_head name = LIST_HEAD_INIT(name)
 
 #define INIT_LIST_HEAD(ptr) \
-    do { (ptr)->next = (ptr); (ptr)->prev = (ptr); } while (0)
+  do { (ptr)->next = (ptr); (ptr)->prev = (ptr); } while (0)
 
 /* list */
-typedef struct as_list_head_s {
-  struct as_list_head_s *next;
-  struct as_list_head_s *prev;
-} as_list_head_t;
+struct list_head {
+  struct list_head *next;
+  struct list_head *prev;
+};
 
 AS_INLINE void
-__list_add (as_list_head_t *add, as_list_head_t *prev, as_list_head_t *next) {
+__list_add (struct list_head *add, struct list_head *prev, struct list_head *next) {
   next->prev = add;
   add->next = next;
   add->prev = prev;
@@ -25,54 +25,54 @@ __list_add (as_list_head_t *add, as_list_head_t *prev, as_list_head_t *next) {
 }
 
 AS_INLINE void
-list_add (as_list_head_t *add, as_list_head_t *head) {
+list_add (struct list_head *add, struct list_head *head) {
   __list_add(add, head, head->next);
 }
 
 AS_INLINE void
-list_add_tail (as_list_head_t *add, as_list_head_t *head) {
+list_add_tail (struct list_head *add, struct list_head *head) {
   __list_add(add, head->prev, head);
 }
 
 AS_INLINE void
-__list_del (as_list_head_t *prev, as_list_head_t *next) {
+__list_del (struct list_head *prev, struct list_head *next) {
   next->prev = prev;
   prev->next = next;
 }
 
 AS_INLINE void
-list_del (as_list_head_t *entry) {
+list_del (struct list_head *entry) {
   __list_del(entry->prev, entry->next);
 }
 
 AS_INLINE void
-list_del_init (as_list_head_t* entry) {
+list_del_init (struct list_head* entry) {
   __list_del(entry->prev, entry->next);
   INIT_LIST_HEAD(entry);
 }
 
 AS_INLINE int
-list_empty (as_list_head_t* head) {
+list_empty (struct list_head* head) {
   return head->next == head;
 }
 
 AS_INLINE int
-list_entry_is_last (as_list_head_t* entry, as_list_head_t* head) {
+list_entry_is_last (struct list_head* entry, struct list_head* head) {
   return head->prev == entry;
 }
 
 AS_INLINE int
-list_entry_is_first (as_list_head_t* entry, as_list_head_t* head) {
+list_entry_is_first (struct list_head* entry, struct list_head* head) {
   return head->next == entry;
 }
 
 AS_INLINE void
-list_splice (as_list_head_t* list, as_list_head_t* head) {
-  as_list_head_t* first = list->next;
+list_splice (struct list_head* list, struct list_head* head) {
+  struct list_head* first = list->next;
 
   if (first != list) {
-    as_list_head_t *last = list->prev;
-    as_list_head_t *at = head->next;
+    struct list_head *last = list->prev;
+    struct list_head *at = head->next;
 
     first->prev = head;
     head->next = first;
@@ -83,27 +83,27 @@ list_splice (as_list_head_t* list, as_list_head_t* head) {
 }
 
 #define list_entry(ptr, type, member) \
-    container_of(ptr, type, member)
+  container_of(ptr, type, member)
 
 #define list_first_entry(head, type, member) \
-    ((head) && (head)->next != (head) ? list_entry((head)->next, type, member) : NULL)
+  ((head) && (head)->next != (head) ? list_entry((head)->next, type, member) : NULL)
 
 #define list_last_entry(head, type, member) \
-    ((head) && (head)->prev != (head) ? list_entry((head)->prev, type, member) : NULL)
+  ((head) && (head)->prev != (head) ? list_entry((head)->prev, type, member) : NULL)
 
 #define list_for_each(pos, head) \
-    for (pos = (head)->next; pos != (head); pos = pos->next)
+  for (pos = (head)->next; pos != (head); pos = pos->next)
 
 #define list_for_each_backwardly(pos, head) \
-    for (pos = (head)->prev; pos != (head); pos = pos->prev)
+  for (pos = (head)->prev; pos != (head); pos = pos->prev)
 
 #define list_for_each_safe(pos, pnext, head) \
-    for (pos = (head)->next, pnext = pos->next; pos != (head); \
-         pos = pnext, pnext = pos->next)
+  for (pos = (head)->next, pnext = pos->next; pos != (head); \
+       pos = pnext, pnext = pos->next)
 
 AS_INLINE size_t
-list_count_entries (as_list_head_t *head) {
-  as_list_head_t *pos;
+list_count_entries (struct list_head *head) {
+  struct list_head *pos;
   size_t ct = 0;
 
   list_for_each(pos, head)

@@ -7,3 +7,7 @@ typedef intptr_t ssize_t;
 #define _SSIZE_T_
 #define SSIZE_T_DEFINED
 #endif
+
+#define AS_HANDLE_PLATFORM_FIELDS /* empty */
+
+#define AS_LOOOP_PRIVATE_FIELDS /* empty */
