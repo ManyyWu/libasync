@@ -11,6 +11,17 @@
 
 static as_loop_t *s_default_loop = NULL;
 
+static void
+as__set_no_close_cb (as_handle_t *handle) {
+  switch (handle->type) {
+  case AS_HANDLE_TYPE_TIMER:
+    handle->flags |= AS_HANDLE_FLAG_NO_CLOSE_CB;
+    break;
+  default:
+    break;
+  }
+}
+
 static as_ms_t
 as__next_timeout (as_loop_t *loop) {
   struct heap_node *min;
@@ -114,6 +125,7 @@ as__handle_init (as_loop_t *loop, as_handle_t *handle) {
   /* you have to call memset and then call as__handle_init */
   handle->loop = loop;
   handle->type = AS_HANDLE_TYPE_TIMER;
+  as__set_no_close_cb(handle);
   as__handleq_add(loop, handle);
 
   return 0;
@@ -152,15 +164,41 @@ as__process_event (as_loop_t *loop, as__io_t *io, unsigned int events) {
 
 int
 as_close (as_handle_t *handle, as_close_cb cb) {
+  int err;
+
   if (!handle || as__handle_closing(handle))
     return AS_EINVAL;
 
   if (!(handle->flags & AS_HANDLE_FLAG_NO_CLOSE_CB))
     handle->callback.close_cb = cb;
 
-  // switch
+  switch (handle->type) {
+#define AS_HANDLE_CLOSE_GEN(type, name)                   \
+  case AS_HANDLE_TYPE_##type:                             \
+    err = as__##name##_close ((as_##name##_t *)(handle)); \
+    break;
+
+    AS_HANDLE_TYPE_MAP(AS_HANDLE_CLOSE_GEN)
+#undef AS_HANDLE_CLOSE_GEN
+  default:
+    return AS_EINVAL;
+  }
 
   handle->flags |= AS_HANDLE_FLAG_CLOSING;
+  if (handle->flags & AS_HANDLE_FLAG_NO_CLOSE_CB)
+    handle->flags |= AS_HANDLE_FLAG_CLOSED;
+
+  return err;
+}
+
+int
+as_closed (as_handle_t *handle) {
+  return (0 != (handle->flags & AS_HANDLE_FLAG_CLOSED));
+}
+
+int
+as_closing (as_handle_t *handle) {
+  return (0 != (handle->flags & AS_HANDLE_FLAG_CLOSING));
 }
 
 void

@@ -47,4 +47,7 @@ as__process_timers (as_loop_t *loop);
 void
 as__timer_heap_init (as_heap_t *heap);
 
+int
+as__timer_close (as_timer_t *timer);
+
 #endif

@@ -111,3 +111,8 @@ as__timer_heap_init (as_heap_t *heap) {
   heap_init(heap, timer_less_than);
 }
 
+int
+as__timer_close (as_timer_t *timer) {
+  as_timer_stop(timer);
+}
+

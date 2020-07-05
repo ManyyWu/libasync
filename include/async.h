@@ -62,7 +62,7 @@
 
 /* handle type */
 enum {
-#define AS_HANDLE_TYPE_ENUM_GEN(name, _) AS_HANDLE_TYPE_##name,
+#define AS_HANDLE_TYPE_ENUM_GEN(type, _) AS_HANDLE_TYPE_##type,
   AS_HANDLE_TYPE_MAP(AS_HANDLE_TYPE_ENUM_GEN)
 #undef AS_HANDLE_TYPE_ENUM_GEN
 };
@@ -265,6 +265,12 @@ struct as_handle_s {
 
 AS_EXPORT int
 as_close (as_handle_t *handle, as_close_cb cb);
+
+AS_EXPORT int
+as_closed (as_handle_t *handle);
+
+AS_EXPORT int
+as_closing (as_handle_t *handle);
 
 /* stream */
 

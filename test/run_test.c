@@ -1,3 +1,4 @@
+#include <uv.h>
 #include "run_test.h"
 #include "unit_list.h"
 
