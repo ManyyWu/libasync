@@ -15,6 +15,22 @@
 
 #define AS_LOOOP_PLATFORM_FIELDS /* empty */
 
+#define AS_STREAM_PLATFORM_FIELDS     \
+  union {                             \
+    struct {                          \
+      as_connect_req *connect_req;    \
+      as_read_cb      read_cb;        \
+      void           *write_reqs[2];  \
+      void           *writed_reqs[2]; \
+      size_t          writeq_bytes;   \
+    } session;                        \
+    struct {                          \
+      as_session_cb  *session_cb;     \
+      int             accept_fd;      \
+      int            *accept_fds;     \
+    } server;                         \
+  } s;
+
 #if defined(AS_SYSTEM_DARWIN)
 typedef semaphone_t as_platform_sem_t;
 #else

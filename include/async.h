@@ -68,19 +68,24 @@ enum {
 };
 
 /* handle types */
-typedef struct as_handle_s as_handle_t;
 typedef struct as_loop_s   as_loop_t;
+typedef struct as_handle_s as_handle_t;
+typedef struct as_stream_s as_stream_t;
 typedef struct as_timer_s  as_timer_t;
 
 /* request types */
+typedef struct as_connect_req_s as_connect_req;
 
 /* callback */
-typedef void (*as_log_cb)          (int level,const char *file, const char *func,
-                                    size_t line, const char *format, va_list vl);
-typedef void (*as_thread_entry_cb) (void *args);
-typedef void (*as_timer_cb)        (as_timer_t *handle);
-typedef void (*as_close_cb)        (as_handle_t *handle);
-typedef int  (*as_heap_less_than)  (const void *a, const void *b);
+typedef void  (*as_log_cb)          (int level,const char *file, const char *func, size_t line,
+                                     const char *format, va_list vl);
+typedef void  (*as_thread_entry_cb) (void *args);
+typedef void* (*as_alloc_cb)        (size_t size);
+typedef void  (*as_read_cb)         (as_stream_t *handle, void *data, size_t len, int ec);
+typedef void  (*as_session_cb)      (as_stream_t *handle, int ec);
+typedef void  (*as_timer_cb)        (as_timer_t *handle);
+typedef void  (*as_close_cb)        (as_handle_t *handle);
+typedef int   (*as_heap_less_than)  (const void *a, const void *b);
 
 /* error */
 AS_EXPORT const char *
@@ -273,6 +278,10 @@ AS_EXPORT int
 as_closing (as_handle_t *handle);
 
 /* stream */
+struct as_stream_s {
+  AS_HANDLE_FIELDS
+  AS_STREAM_PRIVATE_FIELDS
+};
 
 /* pipe */
 
@@ -304,6 +313,10 @@ AS_EXPORT int
 as_timer_stop (as_timer_t *handle);
 AS_EXPORT int
 as_timer_expired (as_timer_t *handle);
+
+/* requests */
+struct as_connect_req_s {
+};
 
 #if defined(__cplusplus)
 //extern }

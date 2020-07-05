@@ -179,6 +179,7 @@ as_close (as_handle_t *handle, as_close_cb cb) {
     break;
 
     AS_HANDLE_TYPE_MAP(AS_HANDLE_CLOSE_GEN)
+
 #undef AS_HANDLE_CLOSE_GEN
   default:
     return AS_EINVAL;

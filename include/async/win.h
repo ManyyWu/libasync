@@ -13,3 +13,5 @@ typedef intptr_t ssize_t;
 #define AS_LOOOP_PLATFORM_FIELDS /* empty */
 
 #define AS__IO_PLATFORM_FIELDS /* empty */
+
+#define AS_STREAM_PLATFORM_FIELDS /* empty */
