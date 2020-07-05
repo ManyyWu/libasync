@@ -107,6 +107,8 @@ if (as_build_test)
        test/test-thread.c
        test/test-list.c
        test/test-heap.c
+       test/test-loop.c
+       test/test-timer.c
       )
   add_executable(async_run_test ${async_test_srcs})
   target_include_directories(async_run_test PUBLIC test)

@@ -5,9 +5,15 @@
 
 #include <netdb.h>
 
-#if defined(AS_SYSTEM_DARWIN)
+#if defined(AS_SYSTEM_LINUX)
+# include "sys/epoll.h"
+#elif defined(AS_SYSTEM_DARWIN)
 # include "async/darwin.h"
 #endif
+
+#define AS_HANDLE_PLATFORM_FIELDS /* empty */
+
+#define AS_LOOOP_PLATFORM_FIELDS /* empty */
 
 #if defined(AS_SYSTEM_DARWIN)
 typedef semaphone_t as_platform_sem_t;
@@ -23,7 +29,10 @@ typedef as_platform_sem_t as_sem_t;
 typedef pthread_t as_thread_t;
 typedef pthread_once_t as_once_t;
 
-#define AS_HANDLE_PLATFORM_FIELDS /* empty */
+#if defined(AS_SYSTEM_LINUX)
+#define AS__IO_PLATFORM_FIELDS \
+   unsigned int mod_events;    \
+   unsigned int events;
 
-#define AS_LOOOP_PRIVATE_FIELDS /* empty */
-
+#elif defined(AS_SYSTEM_DARWIN)
+#endif

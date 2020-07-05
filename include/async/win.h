@@ -10,4 +10,6 @@ typedef intptr_t ssize_t;
 
 #define AS_HANDLE_PLATFORM_FIELDS /* empty */
 
-#define AS_LOOOP_PRIVATE_FIELDS /* empty */
+#define AS_LOOOP_PLATFORM_FIELDS /* empty */
+
+#define AS__IO_PLATFORM_FIELDS /* empty */

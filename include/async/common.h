@@ -3,16 +3,6 @@
 
 #include <stddef.h>
 
-/* memory */
-#if defined(__GNUC__)
-# define as_free(p)                 \
-  do {                              \
-    void *AS_UNIQUE_ID(free) = (p); \
-    free((AS_UNIQUE_ID(free)));     \
-    AS_UNIQUE_ID(free) = NULL;      \
-  } while (0)
-#endif
-
 /* offset */
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 

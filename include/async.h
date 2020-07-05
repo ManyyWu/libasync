@@ -52,14 +52,8 @@
 
 #include "async/config.h"
 #include "async/common.h"
-#include "async/handle.h"
+#include "async/types.h"
 #include "async/error.h"
-
-#if defined(AS_SYSTEM_WIN32)
-# include "async/win.h"
-#else
-# include "async/unix.h"
-#endif
 
 #include <stdint.h>
 #include <inttypes.h>
@@ -67,11 +61,16 @@
 #include <stdarg.h>
 
 /* handle type */
+enum {
+#define AS_HANDLE_TYPE_ENUM_GEN(name, _) AS_HANDLE_TYPE_##name,
+  AS_HANDLE_TYPE_MAP(AS_HANDLE_TYPE_ENUM_GEN)
+#undef AS_HANDLE_TYPE_ENUM_GEN
+};
 
 /* handle types */
 typedef struct as_handle_s as_handle_t;
-typedef struct as_timer_s  as_timer_t;
 typedef struct as_loop_s   as_loop_t;
+typedef struct as_timer_s  as_timer_t;
 
 /* request types */
 
@@ -82,7 +81,6 @@ typedef void (*as_thread_entry_cb) (void *args);
 typedef void (*as_timer_cb)        (as_timer_t *handle);
 typedef void (*as_close_cb)        (as_handle_t *handle);
 typedef int  (*as_heap_less_than)  (const void *a, const void *b);
-
 
 /* error */
 AS_EXPORT const char *
@@ -222,6 +220,18 @@ typedef struct as_heap_s {
   as_heap_less_than less_than;
 } as_heap_t;
 
+/* memory */
+void *
+as_malloc (size_t size);
+
+void *
+as_realloc (void *ptr, size_t size);
+
+void
+as_free (void *ptr);
+
+void
+as_free_safe (void **ptr);
 
 /* loop */
 struct as_loop_s {
@@ -230,15 +240,27 @@ struct as_loop_s {
 };
 
 AS_EXPORT int
+as_loop_init (as_loop_t *loop);
+
+AS_EXPORT as_loop_t *
+as_default_loop ();
+
+AS_EXPORT int
+as_loop_close (as_loop_t *loop);
+
+AS_EXPORT int
 as_run (as_loop_t *loop);
 
 AS_EXPORT int
 as_wakeup (as_loop_t *loop);
 
 /* handle */
-struct as_handle_s {
-  int data;
+#define AS_HANDLE_FIELDS   \
+  void *data;              \
   AS_HANDLE_PRIVATE_FIELDS
+
+struct as_handle_s {
+  AS_HANDLE_FIELDS
 };
 
 AS_EXPORT int
@@ -262,10 +284,12 @@ as_close (as_handle_t *handle, as_close_cb cb);
 
 
 struct as_timer_s {
-  AS_HANDLE_PRIVATE_FIELDS
+  AS_HANDLE_FIELDS
   AS_TIMER_PRIVATE_FIELDS
 };
 
+AS_EXPORT int
+as_update_time (as_loop_t *loop);
 AS_EXPORT int
 as_timer_init (as_loop_t *loop, as_timer_t *handle);
 AS_EXPORT int

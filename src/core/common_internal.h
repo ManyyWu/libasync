@@ -1,69 +1,87 @@
 #ifndef ASYNC_COMMON_INTERNAL_H
 #define ASYNC_COMMON_INTERNAL_H
-
-#define as__check_param(exp)                                \
-  do {                                                      \
-    if (!(exp) ? assert((exp)), 1 : 0)                      \
-      return AS_EINVAL;                                     \
+/*
+#define as__check_param(exp)                                  \
+  do {                                                        \
+    if (!(exp) ? assert((exp)), 1 : 0)                        \
+      return AS_EINVAL;                                       \
+  } while (0)
+*/
+#define as__handleq_add(loop, handle)                         \
+  do {                                                        \
+    (handle)->flags |= AS_HANDLE_FLAG_REF;                    \
+    as__handleq_insert((loop), (handle));                     \
+    /* as__platform_init */                                   \
   } while (0)
 
-#define as__handle_init(loop, handle)                       \
-  do {                                                      \
-    if (as__handle_has_ref(handle))                         \
-      break;                                                \
-    handle->flags |= AS_HANDLE_FLAG_REF;                    \
-    as__handleq_insert(handle);                             \
-    /* as__platform_init */                                 \
+#define as__handleq_del(loop, handle)                         \
+  do {                                                        \
+    (handle)->flags &= ~AS_HANDLE_FLAG_REF;                   \
+    as__handleq_remove((loop), (handle));                     \
+    /* as__platform_deinit */                                 \
   } while (0)
 
-#define as__handle_deinit(loop, handle)                     \
-  do {                                                      \
-    if (!as__handle_has_ref(handle))                        \
-      break;                                                \
-    handle->flags &= ~AS_HANDLE_FLAG_REF;                   \
-    as__handleq_remove(handle);                             \
-    /* as__platform_deinit */                               \
+#define as__handle_start(loop, handle)                        \
+  do {                                                        \
+    if (as__handle_has_active((handle)))                      \
+      break;                                                  \
+    (handle)->flags |= AS_HANDLE_FLAG_ACTIVED;                \
+    (loop)->actived_handles++;                                \
   } while (0)
 
-#define as__handle_start(loop, handle)                      \
-  do {                                                      \
-    if (as__handle_has_active(handle))                      \
-      break;                                                \
-    handle->flags |= AS_HANDLE_FLAG_ACTIVED;                \
-    loop->actived_handles++;                                \
+#define as__handle_stop(loop, handle)                         \
+  do {                                                        \
+    if (!as__handle_has_active((handle)))                     \
+      break;                                                  \
+    (handle)->flags &= ~AS_HANDLE_FLAG_ACTIVED;               \
+    (loop)->actived_handles--;                                \
   } while (0)
 
-#define as__handle_stop(loop, handle)                       \
-  do {                                                      \
-    if (!as__handle_has_active(handle))                     \
-      break;                                                \
-    handle->flags &= ~AS_HANDLE_FLAG_ACTIVED;               \
-    loop->actived_handles--;                                \
-  } while (0)
-
-#define as__handle_has_ref(handle)                          \
+#define as__handle_has_ref(handle)                            \
   ((handle)->flags & AS_HANDLE_FLAG_REF)
 
-#define as__handle_has_active(handle)                       \
+#define as__handle_has_active(handle)                         \
   ((handle)->flags & AS_HANDLE_FLAG_ACTIVED)
 
-#define as__handle_closing(handle)                          \
+#define as__handle_closing(handle)                            \
   ((handle)->flags & AS_HANDLE_FLAG_CLOSING)
 
-#define as__handle_has_close(handle)                        \
+#define as__handle_has_close(handle)                          \
   ((handle)->flags & AS_HANDLE_FLAG_CLOSED)
 
-#define as__handleq_insert(handle)                          \
-  do {                                                      \
-    list_add_tail((struct list_head *)handle->handleq_node, \
-                  (struct list_head *)loop->handleq);       \
+#define as__handleq_insert(loop, handle)                      \
+  do {                                                        \
+    list_add_tail((struct list_head *)(handle)->handleq_node, \
+                  (struct list_head *)(loop)->handleq);       \
   } while (0)
 
-#define as__handleq_remove(handle)                          \
-  do {                                                      \
-    list_del_init((struct list_head *)handle->handleq_node, \
-                  (struct list_head *)loop->handleq);       \
+#define as__handleq_remove(loop, handle)                      \
+  do {                                                        \
+    list_del_init((struct list_head *)(handle)->handleq_node);\
   } while (0)
 
+#define as__pending_io_add(loop, io)                          \
+  do {                                                        \
+    list_add_tail((struct list_head *)(io)->pending_ioq,      \
+                  (struct list_head *)(loop)->pending_ioq);   \
+  } while (0)
+
+#define as__pending_io_del(loop, handle)                      \
+  do {                                                        \
+    list_del_init((struct list_head *)(handle)->pending_ioq,  \
+                  (struct list_head *)(loop)->pending_ioq);   \
+  } while (0)
+
+#define as__io_register(loop, io)                             \
+  do {                                                        \
+    list_add_tail((struct list_head *)(io)->update_ioq,       \
+                  (struct list_head *)(loop)->update_ioq);    \
+  } while (0)
+
+#define as__io_unregister(loop, handle)                       \
+  do {                                                        \
+    list_del_init((struct list_head *)(handle)->update_ioq,   \
+                  (struct list_head *)(loop)->update_ioq);    \
+  } while (0)
 
 #endif
