@@ -41,22 +41,32 @@ list(APPEND async_srcs
      src/core/core.c
      src/core/common_internal.c
      src/core/log.c
-        src/event/timer.c)
+     src/event/loop.c
+     src/event/timer.c
+     src/event/event.c
+     src/stream/stream.c
+     )
 
 if(WIN32)
   list(APPEND async_srcs
        src/core/win_core.c
        src/core/win_util.c
-       src/core/win_thread.c)
+       src/core/win_thread.c
+       src/event/iocp.c
+       )
   list(APPEND async_libs
        ws2_32)
 else()
   if(CMAKE_SYSTEM_NAME MATCHES "Linux|CYGWIN")
     list(APPEND async_srcs
-         src/core/linux_core.c)
+         src/core/linux_core.c
+         src/event/epoll.c
+         )
   elseif(APPLE)
     list(APPEND async_srcs
-         src/core/darwin.c)
+         src/core/darwin.c
+         src/event/kqueue.c
+         )
   endif()
 
   list(APPEND async_srcs

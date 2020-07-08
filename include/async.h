@@ -303,7 +303,7 @@ struct as_timer_s {
   AS_TIMER_PRIVATE_FIELDS
 };
 
-AS_EXPORT int
+AS_EXPORT void
 as_update_time (as_loop_t *loop);
 AS_EXPORT int
 as_timer_init (as_loop_t *loop, as_timer_t *handle);

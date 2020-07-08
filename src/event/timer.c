@@ -1,4 +1,4 @@
-#include "async.h"
+#include "event/loop.h"
 #include "core/core.h"
 
 #include <assert.h>
@@ -13,11 +13,6 @@ timer_less_than (const void *a, const void *b) {
   tb = container_of(b, as_timer_t, heap_node)->timeout;
 
   return (ta < tb);
-}
-
-int
-as_update_time (as_loop_t *loop) {
-  as__update_time(loop);
 }
 
 int

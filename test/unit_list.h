@@ -23,7 +23,7 @@ TEST_DECLARE(timer)
 TEST_DECLARE(win_sys_error)
 #endif
 
-#if 0
+#if 1
 TEST_LIST_START(unit_tests_entry)
   TEST_ENTRY(version)
   TEST_ENTRY(macros)
