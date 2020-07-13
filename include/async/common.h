@@ -44,6 +44,18 @@
   as_log(AS_LOG_DEBUG  , __FILE__, __FUNCTION__, __LINE__, (format), ##__VA_ARGS__);
 #define as_log_trace(format, ...)                                                    \
   as_log(AS_LOG_TRACE  , __FILE__, __FUNCTION__, __LINE__, (format), ##__VA_ARGS__);
+#define as_log_fatal(format, ...)                                                    \
+  as_log(AS_LOG_FATAL  , NULL, NULL, 0, (format), ##__VA_ARGS__);
+#define as_log_error(format, ...)                                                    \
+  as_log(AS_LOG_ERROR  , NULL, NULL, 0, (format), ##__VA_ARGS__);
+#define as_log_warning(format, ...)                                                  \
+  as_log(AS_LOG_WARNING, NULL, NULL, 0, (format), ##__VA_ARGS__);
+#define as_log_info(format, ...)                                                     \
+  as_log(AS_LOG_INFO   , NULL, NULL, 0, (format), ##__VA_ARGS__);
+#define as_log_debug(format, ...)                                                    \
+  as_log(AS_LOG_DEBUG  , NULL, NULL, 0, (format), ##__VA_ARGS__);
+#define as_log_trace(format, ...)                                                    \
+  as_log(AS_LOG_TRACE  , NULL, NULL, 0, (format), ##__VA_ARGS__);
 
 /* time */
 #define AS_NSEC (as_time_t)1e9

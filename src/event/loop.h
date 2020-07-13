@@ -26,6 +26,9 @@ as__process_timers (as_loop_t *loop);
 void
 as__io_init (as__io_t *io, int fd);
 
+void
+as__io_close (as__io_t *io);
+
 int
 as__io_poll (as_loop_t *loop, as_ms_t timeout);
 
