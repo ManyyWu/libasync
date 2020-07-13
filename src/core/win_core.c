@@ -1,21 +1,6 @@
 #include "core/win_core.h"
 
 int
-as__loop_init_platform (as_loop_t *loop) {
-
-}
-
-void
-as__loop_close_platform (as_loop_t *loop) {
-
-}
-
-int
-as__io_poll_platform (as_loop_t *loop, as_ms_t timeout) {
-
-}
-
-int
 as_translate_sys_error (DWORD code) {
   if (code <= 0)
     return code; // already a libasync error code

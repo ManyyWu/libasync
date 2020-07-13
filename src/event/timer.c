@@ -1,4 +1,4 @@
-#include "event/loop.h"
+#include "event/win.h"
 #include "core/core.h"
 
 #include <assert.h>
@@ -20,7 +20,7 @@ as_timer_init (as_loop_t *loop, as_timer_t *handle) {
   int err;
 
   memset((void *)handle + DATA_OFFSET, 0, sizeof(as_timer_t) - DATA_OFFSET);
-  err = as__handle_init(loop, (as_handle_t *)handle);
+  err = as__handle_init(loop, (as_handle_t *)handle, AS_HANDLE_TYPE_TIMER);
   if (err)
     return err;
 
@@ -65,6 +65,7 @@ as_timer_stop (as_timer_t *handle) {
   loop = handle->loop;
   heap_remove(&loop->timer_heap, (struct heap_node *)handle->heap_node);
   as__handle_stop(loop, handle);
+  as__handleq_del(loop, handle);
 
   return 0;
 }
@@ -108,6 +109,6 @@ as__timer_heap_init (as_heap_t *heap) {
 
 int
 as__timer_close (as_timer_t *timer) {
-  as_timer_stop(timer);
+  return as_timer_stop(timer);
 }
 
