@@ -45,10 +45,6 @@ typedef as_platform_sem_t as_sem_t;
 typedef pthread_t as_thread_t;
 typedef pthread_once_t as_once_t;
 
-#if defined(AS_SYSTEM_LINUX)
 #define AS__IO_PLATFORM_FIELDS \
    unsigned int mod_events;    \
    unsigned int events;
-
-#elif defined(AS_SYSTEM_DARWIN)
-#endif

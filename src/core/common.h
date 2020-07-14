@@ -70,16 +70,4 @@
                   (struct list_head *)(loop)->pending_ioq);   \
   } while (0)
 
-#define as__io_register(loop, io)                             \
-  do {                                                        \
-    list_add_tail((struct list_head *)(io)->update_ioq,       \
-                  (struct list_head *)(loop)->update_ioq);    \
-  } while (0)
-
-#define as__io_unregister(loop, handle)                       \
-  do {                                                        \
-    list_del_init((struct list_head *)(handle)->update_ioq,   \
-                  (struct list_head *)(loop)->update_ioq);    \
-  } while (0)
-
 #endif

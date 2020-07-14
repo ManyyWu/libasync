@@ -107,11 +107,20 @@ as__io_poll (as_loop_t *loop, as_ms_t timeout) {
 }
 
 void
-as__io_register (as__io_t *io, int event) {
-
+as__io_register(as_loop_t *loop, as__io_t *io, int event) {
+  assert(list_empty((struct list_head *) io->update_ioq));
+  io->mod_events = event;
+  list_add_tail((struct list_head *) io->update_ioq,
+                (struct list_head *) loop->update_ioq);
 }
 
-void
-as__io_unregister (as__io_t *io, int event) {
+int
+as__io_unregister(as_loop_t *loop, as__io_t *io) {
+  int err;
+  struct epoll_event e;
 
+  list_del_init((struct list_head *) io->update_ioq);
+
+  memset(&e, 0, sizeof(e));
+  return AS_ERRNO(epoll_ctl(loop->epoll_fd, EPOLL_CTL_DEL, io->fd, &e));
 }
