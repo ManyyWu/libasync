@@ -44,17 +44,17 @@
   as_log(AS_LOG_DEBUG  , __FILE__, __FUNCTION__, __LINE__, (format), ##__VA_ARGS__);
 #define as_log_trace(format, ...)                                                    \
   as_log(AS_LOG_TRACE  , __FILE__, __FUNCTION__, __LINE__, (format), ##__VA_ARGS__);
-#define as_log_fatal(format, ...)                                                    \
+#define as_log_fatal2(format, ...)                                                   \
   as_log(AS_LOG_FATAL  , NULL, NULL, 0, (format), ##__VA_ARGS__);
-#define as_log_error(format, ...)                                                    \
+#define as_log_error2(format, ...)                                                   \
   as_log(AS_LOG_ERROR  , NULL, NULL, 0, (format), ##__VA_ARGS__);
-#define as_log_warning(format, ...)                                                  \
+#define as_log_warning2(format, ...)                                                 \
   as_log(AS_LOG_WARNING, NULL, NULL, 0, (format), ##__VA_ARGS__);
-#define as_log_info(format, ...)                                                     \
+#define as_log_info2(format, ...)                                                    \
   as_log(AS_LOG_INFO   , NULL, NULL, 0, (format), ##__VA_ARGS__);
-#define as_log_debug(format, ...)                                                    \
+#define as_log_debug2(format, ...)                                                   \
   as_log(AS_LOG_DEBUG  , NULL, NULL, 0, (format), ##__VA_ARGS__);
-#define as_log_trace(format, ...)                                                    \
+#define as_log_trace2(format, ...)                                                   \
   as_log(AS_LOG_TRACE  , NULL, NULL, 0, (format), ##__VA_ARGS__);
 
 /* time */
