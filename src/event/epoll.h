@@ -1,5 +1,5 @@
-#ifndef ASYNC_EVENT_LINUX_H
-#define ASYNC_EVENT_EPOLL_H
+#ifndef ASYNC_EPOLL_H
+#define ASYNC_EPOLL_H
 
 #include "async.h"
 

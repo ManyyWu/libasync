@@ -1,6 +1,6 @@
-#include "stream/stream.h"
-#include "event/win.h"
 #include "core/core.h"
+#include "event/loop.h"
+#include "stream/unix_stream.h"
 
 #include <unistd.h>
 #include <assert.h>

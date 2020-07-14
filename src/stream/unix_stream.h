@@ -1,5 +1,5 @@
-#ifndef ASYNC_STREAM_H
-#define ASYNC_STREAM_H
+#ifndef ASYNC_UNIX_STREAM_H
+#define ASYNC_UNIX_STREAM_H
 
 #include "async.h"
 

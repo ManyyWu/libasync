@@ -1,5 +1,5 @@
-#include "event/win.h"
 #include "core/core.h"
+#include "event/loop.h"
 
 #define DEFAULT_TIMEOUT 3000
 
@@ -189,4 +189,9 @@ as_closed (as_handle_t *handle) {
 int
 as_closing (as_handle_t *handle) {
   return (0 != (handle->flags & AS_HANDLE_FLAG_CLOSING));
+}
+
+void
+as__process_event (as_loop_t *loop, as__io_t *io, unsigned int events) {
+
 }
