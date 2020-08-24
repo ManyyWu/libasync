@@ -1,4 +1,5 @@
 #include "event/loop.h"
+#include "event/linux.h"
 #include "core/core.h"
 
 #include <assert.h>
@@ -38,6 +39,13 @@ as__io_init (as__io_t *io, int fd) {
   io->events = 0;
   INIT_LIST_HEAD((struct list_head *)io->update_ioq);
   INIT_LIST_HEAD((struct list_head *)io->pending_ioq);
+}
+
+void
+as__io_close (as__io_t *io) {
+  io->fd = -1;
+  list_del_init((struct list_head *)io->update_ioq);
+  list_del_init((struct list_head *)io->pending_ioq);
 }
 
 int
@@ -96,4 +104,23 @@ as__io_poll (as_loop_t *loop, as_ms_t timeout) {
       as__process_event(loop, events[i].data.ptr, events[i].events);
     }
   }
+}
+
+void
+as__io_register(as_loop_t *loop, as__io_t *io, int event) {
+  assert(list_empty((struct list_head *) io->update_ioq));
+  io->mod_events = event;
+  list_add_tail((struct list_head *) io->update_ioq,
+                (struct list_head *) loop->update_ioq);
+}
+
+int
+as__io_unregister(as_loop_t *loop, as__io_t *io) {
+  int err;
+  struct epoll_event e;
+
+  list_del_init((struct list_head *) io->update_ioq);
+
+  memset(&e, 0, sizeof(e));
+  return AS_ERRNO(epoll_ctl(loop->epoll_fd, EPOLL_CTL_DEL, io->fd, &e));
 }

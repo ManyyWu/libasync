@@ -1,5 +1,5 @@
-#ifndef ASYNC_HANDLE_H
-#define ASYNC_HANDLE_H
+#ifndef ASYNC_TYPES_H
+#define ASYNC_TYPES_H
 
 #if defined(AS_SYSTEM_WIN32)
 # include "async/win.h"

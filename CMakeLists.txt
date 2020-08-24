@@ -39,12 +39,10 @@ include_directories(${inc_dirs})
 
 list(APPEND async_srcs
      src/core/core.c
-     src/core/common_internal.c
+     src/core/common.c
      src/core/log.c
-     src/event/loop.c
      src/event/timer.c
-     src/event/event.c
-     src/stream/stream.c
+     src/event/loop.c
      )
 
 if(WIN32)
@@ -53,6 +51,7 @@ if(WIN32)
        src/core/win_util.c
        src/core/win_thread.c
        src/event/iocp.c
+       src/stream/win_stream.c
        )
   list(APPEND async_libs
        ws2_32)
@@ -61,6 +60,7 @@ else()
     list(APPEND async_srcs
          src/core/linux_core.c
          src/event/epoll.c
+         src/stream/unix_stream.c
          )
   elseif(APPLE)
     list(APPEND async_srcs

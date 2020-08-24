@@ -1,5 +1,5 @@
-#ifndef ASYNC_COMMON_INTERNAL_H
-#define ASYNC_COMMON_INTERNAL_H
+#ifndef ASYNC_CORE_COMMON_H
+#define ASYNC_CORE_COMMON_H
 /*
 #define as__check_param(exp)                                  \
   do {                                                        \
@@ -11,14 +11,12 @@
   do {                                                        \
     (handle)->flags |= AS_HANDLE_FLAG_REF;                    \
     as__handleq_insert((loop), (handle));                     \
-    /* as__platform_init */                                   \
   } while (0)
 
 #define as__handleq_del(loop, handle)                         \
   do {                                                        \
     (handle)->flags &= ~AS_HANDLE_FLAG_REF;                   \
     as__handleq_remove((loop), (handle));                     \
-    /* as__platform_deinit */                                 \
   } while (0)
 
 #define as__handle_start(loop, handle)                        \
@@ -70,18 +68,6 @@
   do {                                                        \
     list_del_init((struct list_head *)(handle)->pending_ioq,  \
                   (struct list_head *)(loop)->pending_ioq);   \
-  } while (0)
-
-#define as__io_register(loop, io)                             \
-  do {                                                        \
-    list_add_tail((struct list_head *)(io)->update_ioq,       \
-                  (struct list_head *)(loop)->update_ioq);    \
-  } while (0)
-
-#define as__io_unregister(loop, handle)                       \
-  do {                                                        \
-    list_del_init((struct list_head *)(handle)->update_ioq,   \
-                  (struct list_head *)(loop)->update_ioq);    \
   } while (0)
 
 #endif

@@ -4,7 +4,7 @@
 #include "async.h"
 #include "core/list.h"
 #include "core/heap.h"
-#include "core/common_internal.h"
+#include "core/common.h"
 
 #include <memory.h>
 

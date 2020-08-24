@@ -1,5 +1,5 @@
-#include "event/loop.h"
 #include "core/core.h"
+#include "event/loop.h"
 
 #define DEFAULT_TIMEOUT 3000
 
@@ -157,13 +157,13 @@ as__set_no_close_cb (as_handle_t *handle) {
 }
 
 int
-as__handle_init (as_loop_t *loop, as_handle_t *handle) {
+as__handle_init (as_loop_t *loop, as_handle_t *handle, int type) {
   if (as__handle_has_ref((handle)))
     return AS_EINVAL;
 
   /* you have to call memset and then call as__handle_init */
   handle->loop = loop;
-  handle->type = AS_HANDLE_TYPE_TIMER;
+  handle->type = type;
   as__set_no_close_cb(handle);
   as__handleq_add(loop, handle);
 
@@ -189,4 +189,9 @@ as_closed (as_handle_t *handle) {
 int
 as_closing (as_handle_t *handle) {
   return (0 != (handle->flags & AS_HANDLE_FLAG_CLOSING));
+}
+
+void
+as__process_event (as_loop_t *loop, as__io_t *io, unsigned int events) {
+
 }
