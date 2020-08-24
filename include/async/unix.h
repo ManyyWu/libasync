@@ -1,3 +1,6 @@
+#ifndef ASYNC_UNIX_H
+#define ASYNC_UNIX_H
+
 #include <sys/types.h>
 
 #include <semaphore.h>
@@ -51,4 +54,6 @@ typedef pthread_once_t as_once_t;
    unsigned int events;
 
 #elif defined(AS_SYSTEM_DARWIN)
+#endif
+
 #endif

@@ -1,3 +1,6 @@
+#ifndef ASYNC_WIN_H
+#define ASYNC_WIN_H
+
 #include <winsock2.h>
 #include <windows.h>
 
@@ -15,3 +18,5 @@ typedef intptr_t ssize_t;
 #define AS__IO_PLATFORM_FIELDS /* empty */
 
 #define AS_STREAM_PLATFORM_FIELDS /* empty */
+
+#endif

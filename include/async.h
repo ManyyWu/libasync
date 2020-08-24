@@ -79,7 +79,7 @@ typedef struct as_connect_req_s as_connect_req;
 /* callback */
 typedef void  (*as_log_cb)          (int level,const char *file, const char *func, size_t line,
                                      const char *format, va_list vl);
-typedef void  (*as_thread_entry_cb) (void *args);
+typedef void  (*as_thread_entry)    (void *args);
 typedef void* (*as_alloc_cb)        (size_t size);
 typedef void  (*as_read_cb)         (as_stream_t *handle, void *data, size_t len, int ec);
 typedef void  (*as_session_cb)      (as_stream_t *handle, int ec);
@@ -202,7 +202,7 @@ typedef struct as_thread_opts_s {
 
 AS_EXPORT int
 as_thread_create (as_thread_t* t, const as_thread_opts_t* opts,
-                  as_thread_entry_cb entry, void* args);
+                  as_thread_entry entry, void* args);
 AS_EXPORT as_thread_t
 as_thread_self (void);
 AS_EXPORT as_tid_t
