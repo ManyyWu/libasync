@@ -1,0 +1,113 @@
+/****************************************************/
+/* handle */
+#ifdef _WIN32
+typedef int as_handle_t
+#else
+typedef HANDLE as_handle_t
+#endif
+
+as_tcp_server_t
+as_udp_server_t
+as_http_server_t
+/****************************************************/
+
+/****************************************************/
+/* buffer */
+struct as_buffer_s {
+  char *data;
+  uint32_t size;
+};
+
+typedef struct as_buffer_s as_buffer_t;
+
+as_buffer_t
+as_buffer_init (char *data, uint32_t size);
+/****************************************************/
+
+/****************************************************/
+/* threadpoll */
+typedef void (*as_slot_cb) (as_slot_t *)
+
+void on_slot (as_slot_t *slot) {
+}
+const void *sig1 = &on_slot;
+const void *sig2 = &on_slot;
+
+void on_task (as_task_t *task) {
+  as_emit((as_slot_t *)&task->user_data);
+  as_emit((as_slot_t *)&task->user_data);
+}
+
+void on_after () {
+}
+
+as_slot_t slot;
+as_slot_connect(&slot, on_slot);
+
+as_task_t task = {.user_data = &slot};
+as_task_start(&task, on_task, on_after);
+/****************************************************/
+
+/****************************************************/
+/* thread */
+as_thread_create(user_data);
+as_thread_associate(&loop);
+as_thread_on(code_xxx, xxx_cb); // code_xxx为掩码, 预定义
+as_thread_on(run, exit_cb);
+as_thread_on(exit, exit_cb);
+/****************************************************/
+
+/****************************************************/
+/* macro.h */
+#define BUF_INIT(data, size) as_buffer_init((char *)(data), (size))
+#define EMIT(slot, event, param) as_emit(SLOT(slot), SIGNAL(event), (param));
+#define SET_FALGS(value, flags)
+#define IS_FLAGS(value, flags)
+#define SET_BIT(value, bit)
+#define IS_BIT(value, bit)
+#ifndef _WIN32
+#define AS_INVALID_HANDLE (-1)
+#else
+#define AS_INVALID_HANDLE (NULL)
+#endif
+#define AS_HANDLE_VALID(handle) ((handle) == AS_INVALID_FD)
+#define AS_HANDLE_INVALID(handle) ((handle) != AS_INVALID_FD)
+/****************************************************/
+
+/****************************************************/
+跨平台尽量使用
+union {
+  struct { as_platform_win_fields } f_win;
+  struct { as_platform_unix_fields     } f_unix;
+};
+的方式, 防止产生没用的字段
+/****************************************************/
+
+/****************************************************/
+tcp:
+init->bind->listen 可以跃级调用
+on/off之类的选项:
+#define as_tcp_opt_xxx(tcp, on)
+uv_read() 手动读
+/****************************************************/
+
+/****************************************************/
+日志:
+多进程写日志?
+/****************************************************/
+
+/****************************************************/
+#define as_set_userdata(h, data)
+#define as_userdata(h)
+/****************************************************/
+
+/****************************************************/
+int as_run()
+int as_break()
+/****************************************************/
+
+/****************************************************/
+错误处理:
+函数入口处assert, loop, handle不检查
+/****************************************************/
+
